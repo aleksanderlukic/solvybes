@@ -26,6 +26,13 @@ type Friend = {
   online: boolean;
 };
 
+type FriendRequest = {
+  id: string;
+  from: string;
+  fromAvatar: string;
+  timestamp: string;
+};
+
 type Group = {
   id: string;
   name: string;
@@ -33,7 +40,7 @@ type Group = {
   members: string[];
 };
 
-type Tab = "channels" | "messages" | "groups";
+type Tab = "channels" | "messages" | "groups" | "friends";
 
 export default function CommunityPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -60,13 +67,28 @@ export default function CommunityPage() {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [friendRequests, setFriendRequests] = useState<FriendRequest[]>([
+    { id: "1", from: "Maria", fromAvatar: "👧", timestamp: "2 min ago" },
+    { id: "2", from: "Lucas", fromAvatar: "🧑", timestamp: "1 hour ago" },
+  ]);
+  const [sentRequests, setSentRequests] = useState<string[]>([]);
 
-  const [friends] = useState<Friend[]>([
+  const [friends, setFriends] = useState<Friend[]>([
+    { id: "1", name: "Sofia", avatar: "👩", online: true },
+    { id: "2", name: "Erik", avatar: "👨", online: true },
+  ]);
+
+  const [allUsers] = useState<Friend[]>([
     { id: "1", name: "Sofia", avatar: "👩", online: true },
     { id: "2", name: "Erik", avatar: "👨", online: true },
     { id: "3", name: "Anna", avatar: "👧", online: false },
     { id: "4", name: "Johan", avatar: "🧔", online: true },
     { id: "5", name: "Emma", avatar: "👱‍♀️", online: true },
+    { id: "6", name: "Maria", avatar: "👧", online: true },
+    { id: "7", name: "Lucas", avatar: "🧑", online: false },
+    { id: "8", name: "Oliver", avatar: "👨", online: true },
+    { id: "9", name: "Elsa", avatar: "👩", online: true },
   ]);
 
   const [groups, setGroups] = useState<Group[]>([
@@ -231,6 +253,43 @@ export default function CommunityPage() {
       setShowCreateGroup(false);
     }
   };
+
+  const handleSendFriendRequest = (userName: string) => {
+    setSentRequests([...sentRequests, userName]);
+  };
+
+  const handleAcceptFriendRequest = (requestId: string) => {
+    const request = friendRequests.find((r) => r.id === requestId);
+    if (request) {
+      const newFriend: Friend = {
+        id: String(friends.length + 1),
+        name: request.from,
+        avatar: request.fromAvatar,
+        online: true,
+      };
+      setFriends([...friends, newFriend]);
+      setFriendRequests(friendRequests.filter((r) => r.id !== requestId));
+    }
+  };
+
+  const handleRejectFriendRequest = (requestId: string) => {
+    setFriendRequests(friendRequests.filter((r) => r.id !== requestId));
+  };
+
+  const isFriend = (userName: string) => {
+    return friends.some((f) => f.name === userName);
+  };
+
+  const hasSentRequest = (userName: string) => {
+    return sentRequests.includes(userName);
+  };
+
+  const filteredUsers = allUsers.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      user.name !== username &&
+      !isFriend(user.name)
+  );
 
   const toggleMemberSelection = (friendName: string) => {
     if (selectedMembers.includes(friendName)) {
@@ -409,6 +468,17 @@ export default function CommunityPage() {
         >
           👥 Groups
         </button>
+        <button
+          onClick={() => setActiveTab("friends")}
+          className={`${styles.tab} ${
+            activeTab === "friends" ? styles.activeTab : ""
+          }`}
+        >
+          🤝 Friends
+          {friendRequests.length > 0 && (
+            <span className={styles.badge}>{friendRequests.length}</span>
+          )}
+        </button>
       </div>
 
       <div className={styles.communityLayout}>
@@ -490,6 +560,37 @@ export default function CommunityPage() {
             </>
           )}
 
+          {activeTab === "friends" && (
+            <>
+              <h3 className={styles.sidebarTitle}>
+                Mina Vänner ({friends.length})
+              </h3>
+              <div className={styles.channelList}>
+                {friends.map((friend) => (
+                  <button
+                    key={friend.id}
+                    onClick={() => setActiveDM(friend.id)}
+                    className={styles.channelButton}
+                  >
+                    <span className={styles.channelIcon}>{friend.avatar}</span>
+                    <span className={styles.channelName}>{friend.name}</span>
+                    {friend.online && (
+                      <span className={styles.onlineDot}>🟢</span>
+                    )}
+                  </button>
+                ))}
+                {friends.length === 0 && (
+                  <div className={styles.emptyState}>
+                    <p>Inga vänner ännu</p>
+                    <p className={styles.emptyHint}>
+                      Sök och lägg till vänner i huvudfönstret →
+                    </p>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
           <div className={styles.onlineUsers}>
             <h4 className={styles.onlineTitle}>
               Friends Online ({onlineFriends.length})
@@ -543,6 +644,113 @@ export default function CommunityPage() {
               <p className={styles.placeholderText}>
                 Select a group to view messages
               </p>
+            </div>
+          )}
+
+          {activeTab === "friends" && (
+            <div className={styles.friendsMainArea}>
+              {friendRequests.length > 0 && (
+                <div className={styles.requestsMainSection}>
+                  <h2 className={styles.sectionTitle}>
+                    Vänförfrågningar{" "}
+                    <span className={styles.countBadge}>
+                      {friendRequests.length}
+                    </span>
+                  </h2>
+                  <div className={styles.requestsGrid}>
+                    {friendRequests.map((request) => (
+                      <div key={request.id} className={styles.requestCard}>
+                        <div className={styles.requestAvatar}>
+                          {request.fromAvatar}
+                        </div>
+                        <div className={styles.requestInfo}>
+                          <div className={styles.requestName}>
+                            {request.from}
+                          </div>
+                          <div className={styles.requestTime}>
+                            {request.timestamp}
+                          </div>
+                        </div>
+                        <div className={styles.requestButtons}>
+                          <button
+                            onClick={() =>
+                              handleAcceptFriendRequest(request.id)
+                            }
+                            className={styles.acceptButton}
+                          >
+                            ✓ Acceptera
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleRejectFriendRequest(request.id)
+                            }
+                            className={styles.rejectButton}
+                          >
+                            ✕ Avvisa
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className={styles.searchSection}>
+                <h2 className={styles.sectionTitle}>Sök Nya Vänner</h2>
+                <input
+                  type="text"
+                  placeholder="Sök användare..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className={styles.searchInputMain}
+                />
+              </div>
+
+              <div className={styles.usersGrid}>
+                {filteredUsers.map((user) => (
+                  <div key={user.id} className={styles.userCardLarge}>
+                    <div className={styles.userAvatarLarge}>{user.avatar}</div>
+                    <div className={styles.userInfoLarge}>
+                      <div className={styles.userName}>{user.name}</div>
+                      {user.online ? (
+                        <div className={styles.statusOnline}>🟢 Online</div>
+                      ) : (
+                        <div className={styles.statusOffline}>⚫ Offline</div>
+                      )}
+                    </div>
+                    {!hasSentRequest(user.name) ? (
+                      <button
+                        onClick={() => handleSendFriendRequest(user.name)}
+                        className={styles.addFriendButtonLarge}
+                      >
+                        ➕ Lägg till vän
+                      </button>
+                    ) : (
+                      <div className={styles.sentLabelLarge}>
+                        ✓ Förfrågan skickad
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {filteredUsers.length === 0 && searchQuery && (
+                  <div className={styles.noResultsLarge}>
+                    <div className={styles.noResultsIcon}>🔍</div>
+                    <p>Inga användare hittades</p>
+                    <p className={styles.noResultsHint}>
+                      Prova ett annat sökord
+                    </p>
+                  </div>
+                )}
+                {filteredUsers.length === 0 && !searchQuery && (
+                  <div className={styles.noResultsLarge}>
+                    <div className={styles.noResultsIcon}>🎉</div>
+                    <p>Du är redan vän med alla!</p>
+                    <p className={styles.noResultsHint}>
+                      Fantastiskt! Du har lagt till alla tillgängliga användare.
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
