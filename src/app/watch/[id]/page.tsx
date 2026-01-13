@@ -24,6 +24,8 @@ export default function WatchPage() {
   const [videoVolume, setVideoVolume] = useState(100);
   const [musicVolume, setMusicVolume] = useState(50);
   const [radioVolume, setRadioVolume] = useState(50);
+  const [selectedRadio, setSelectedRadio] = useState("p1");
+  const [selectedMusic, setSelectedMusic] = useState("lofi");
   const [comments, setComments] = useState<Comment[]>([
     {
       id: 1,
@@ -121,6 +123,36 @@ export default function WatchPage() {
       icon: "🔇",
       description: "No audio",
     },
+  ];
+
+  const radioStations = [
+    { id: "p1", name: "P1", description: "Nyheter och samhälle" },
+    { id: "p2", name: "P2", description: "Klassisk musik och kultur" },
+    { id: "p3", name: "P3", description: "Pop och ungdom" },
+    { id: "p4", name: "P4", description: "Lokalt och regionalt" },
+    { id: "chill", name: "Chill Radio", description: "Lounge och chill vibes" },
+    { id: "summer", name: "Summer Hits", description: "Sommarens bästa låtar" },
+  ];
+
+  const musicOptions = [
+    {
+      id: "lofi",
+      name: "Lo-Fi Hip Hop",
+      description: "Studie- och avkopplingsmusik",
+    },
+    {
+      id: "ambient",
+      name: "Ambient",
+      description: "Atmosfärisk bakgrundsmusik",
+    },
+    { id: "jazz", name: "Smooth Jazz", description: "Lugn jazzmusik" },
+    { id: "classical", name: "Classical", description: "Klassisk musik" },
+    {
+      id: "nature",
+      name: "Nature Sounds",
+      description: "Naturljud och fågelsång",
+    },
+    { id: "beach", name: "Beach Vibes", description: "Somriga strandlåtar" },
   ];
 
   return (
@@ -223,10 +255,62 @@ export default function WatchPage() {
             )}
           </div>
 
+          {activeMode === "radio" && (
+            <div className={styles.optionsSection}>
+              <h3 className={styles.optionsTitle}>Välj Radiokanal</h3>
+              <div className={styles.optionsList}>
+                {radioStations.map((station) => (
+                  <button
+                    key={station.id}
+                    onClick={() => setSelectedRadio(station.id)}
+                    className={`${styles.optionButton} ${
+                      selectedRadio === station.id ? styles.selected : ""
+                    }`}
+                  >
+                    <div className={styles.optionName}>📻 {station.name}</div>
+                    <div className={styles.optionDescription}>
+                      {station.description}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeMode === "music" && (
+            <div className={styles.optionsSection}>
+              <h3 className={styles.optionsTitle}>Välj Musik</h3>
+              <div className={styles.optionsList}>
+                {musicOptions.map((music) => (
+                  <button
+                    key={music.id}
+                    onClick={() => setSelectedMusic(music.id)}
+                    className={`${styles.optionButton} ${
+                      selectedMusic === music.id ? styles.selected : ""
+                    }`}
+                  >
+                    <div className={styles.optionName}>🎵 {music.name}</div>
+                    <div className={styles.optionDescription}>
+                      {music.description}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className={styles.infoBox}>
             <p>
-              💡 <strong>Tip:</strong> Switch audio modes to customize your
-              experience. Music and Radio overlays coming soon!
+              💡 <strong>Tip:</strong> Välj mellan olika ljudlägen för att
+              anpassa din upplevelse.
+              {activeMode === "radio" &&
+                ` Nu spelar: ${
+                  radioStations.find((s) => s.id === selectedRadio)?.name
+                }`}
+              {activeMode === "music" &&
+                ` Nu spelar: ${
+                  musicOptions.find((m) => m.id === selectedMusic)?.name
+                }`}
             </p>
           </div>
         </div>

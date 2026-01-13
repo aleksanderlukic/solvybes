@@ -184,6 +184,60 @@
     }
   }
 
+  .optionsSection {
+    margin-top: $spacing-xl;
+    padding-top: $spacing-xl;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .optionsTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $color-white;
+    margin-bottom: $spacing-md;
+  }
+
+  .optionsList {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .optionButton {
+    width: 100%;
+    padding: $spacing-md;
+    border-radius: $radius-md;
+    text-align: left;
+    transition: all $transition-fast;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &.selected {
+      background: rgba(253, 172, 116, 0.15);
+      border-color: rgba(253, 172, 116, 0.4);
+    }
+  }
+
+  .optionName {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $color-white;
+    margin-bottom: $spacing-xs;
+  }
+
+  .optionDescription {
+    font-size: 0.8125rem;
+    color: $color-text-tertiary;
+  }
+
   .infoBox {
     margin-top: $spacing-xl;
     padding: $spacing-md;
