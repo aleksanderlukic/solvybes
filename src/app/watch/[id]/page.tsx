@@ -126,15 +126,68 @@ export default function WatchPage() {
   ];
 
   const radioStations = [
-    { id: "p1", name: "P1", description: "Nyheter och samhälle" },
-    { id: "p2", name: "P2", description: "Klassisk musik och kultur" },
-    { id: "p3", name: "P3", description: "Pop och ungdom" },
-    { id: "p4", name: "P4", description: "Lokalt och regionalt" },
-    { id: "chill", name: "Chill Radio", description: "Lounge och chill vibes" },
-    { id: "summer", name: "Summer Hits", description: "Sommarens bästa låtar" },
+    { id: "p1", name: "🇸🇪 P1", description: "Nyheter och samhälle" },
+    { id: "p2", name: "🇸🇪 P2", description: "Klassisk musik och kultur" },
+    { id: "p3", name: "🇸🇪 P3", description: "Pop och ungdom" },
+    { id: "p4", name: "🇸🇪 P4", description: "Lokalt och regionalt" },
+    {
+      id: "summer",
+      name: "☀️ Summer Hits Radio",
+      description: "Sommarens bästa låtar",
+    },
+    {
+      id: "beach",
+      name: "🏖️ Beach Vibes Radio",
+      description: "Avslappnade strandlåtar",
+    },
+    {
+      id: "tropical",
+      name: "🌴 Tropical House Radio",
+      description: "Tropical house och chill",
+    },
+    { id: "bbc1", name: "🇬🇧 BBC Radio 1", description: "UK Pop och Rock" },
+    {
+      id: "bbc2",
+      name: "🇬🇧 BBC Radio 2",
+      description: "UK Adult Contemporary",
+    },
+    { id: "capitalfm", name: "🇬🇧 Capital FM", description: "UK Pop Hits" },
+    { id: "kiis", name: "🇺🇸 KIIS FM", description: "USA Top 40 Hits" },
+    { id: "z100", name: "🇺🇸 Z100", description: "New York's Hit Music" },
+    { id: "power106", name: "🇺🇸 Power 106", description: "Hip Hop & R&B" },
+    {
+      id: "losradio",
+      name: "🇪🇸 Los 40",
+      description: "Spaniens största hitradio",
+    },
+    {
+      id: "cadenadial",
+      name: "🇪🇸 Cadena Dial",
+      description: "Spansk popmusik",
+    },
+    { id: "sfera", name: "🇬🇷 Sfera Radio", description: "Grekisk top 40" },
+    { id: "antenna", name: "🇬🇷 Antenna Radio", description: "Grekiska hits" },
   ];
 
   const musicOptions = [
+    {
+      id: "spotify",
+      name: "🎧 Koppla Spotify",
+      description: "Anslut ditt Spotify-konto",
+      isExternal: true,
+    },
+    {
+      id: "apple",
+      name: "🎵 Koppla Apple Music",
+      description: "Anslut ditt Apple Music-konto",
+      isExternal: true,
+    },
+    {
+      id: "youtube",
+      name: "▶️ Koppla YouTube Music",
+      description: "Anslut ditt YouTube Music-konto",
+      isExternal: true,
+    },
     {
       id: "lofi",
       name: "Lo-Fi Hip Hop",
@@ -267,7 +320,7 @@ export default function WatchPage() {
                       selectedRadio === station.id ? styles.selected : ""
                     }`}
                   >
-                    <div className={styles.optionName}>📻 {station.name}</div>
+                    <div className={styles.optionName}>{station.name}</div>
                     <div className={styles.optionDescription}>
                       {station.description}
                     </div>
@@ -281,15 +334,21 @@ export default function WatchPage() {
             <div className={styles.optionsSection}>
               <h3 className={styles.optionsTitle}>Välj Musik</h3>
               <div className={styles.optionsList}>
-                {musicOptions.map((music) => (
+                {musicOptions.map((music: any) => (
                   <button
                     key={music.id}
-                    onClick={() => setSelectedMusic(music.id)}
+                    onClick={() => {
+                      if (music.isExternal) {
+                        alert(`Ansluter till ${music.name}... (Kommer snart!)`);
+                      } else {
+                        setSelectedMusic(music.id);
+                      }
+                    }}
                     className={`${styles.optionButton} ${
                       selectedMusic === music.id ? styles.selected : ""
-                    }`}
+                    } ${music.isExternal ? styles.external : ""}`}
                   >
-                    <div className={styles.optionName}>🎵 {music.name}</div>
+                    <div className={styles.optionName}>{music.name}</div>
                     <div className={styles.optionDescription}>
                       {music.description}
                     </div>
