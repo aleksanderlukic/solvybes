@@ -289,3 +289,171 @@
   font-size: 0.875rem;
   color: $color-text-secondary;
 }
+
+.citiesSection {
+  margin-bottom: $spacing-3xl;
+  margin-top: $spacing-3xl;
+
+  .sectionTitle {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: $color-white;
+    margin-bottom: $spacing-md;
+    text-align: center;
+  }
+
+  .sectionSubtitle {
+    font-size: 1.125rem;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-3xl;
+    text-align: center;
+  }
+}
+
+.loadingWeather {
+  text-align: center;
+  padding: $spacing-3xl;
+  color: $color-text-secondary;
+}
+
+.loadingSpinner {
+  font-size: 4rem;
+  margin-bottom: $spacing-md;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.citiesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-md;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.cityCard {
+  @include card;
+  padding: $spacing-2xl;
+  transition: all $transition-normal;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, $color-peach, $color-sunset);
+  }
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(253, 172, 116, 0.4);
+  }
+}
+
+.cityHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-2xl;
+}
+
+.cityFlag {
+  font-size: 3.5rem;
+  line-height: 1;
+}
+
+.cityInfo {
+  flex: 1;
+}
+
+.cityName {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-xs;
+  line-height: 1.2;
+}
+
+.cityCountry {
+  font-size: 1rem;
+  color: $color-text-secondary;
+  font-weight: 500;
+}
+
+.cityStats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-xl;
+}
+
+.cityStat {
+  text-align: center;
+  padding: $spacing-lg;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: $radius-md;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: scale(1.05);
+  }
+}
+
+.cityStatIcon {
+  font-size: 2rem;
+  margin-bottom: $spacing-md;
+  opacity: 0.8;
+}
+
+.cityStatValue {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: $spacing-sm;
+  line-height: 1;
+
+  &.tempCold {
+    color: #60a5fa;
+  }
+
+  &.tempCool {
+    color: #34d399;
+  }
+
+  &.tempMild {
+    color: #fbbf24;
+  }
+
+  &.tempWarm {
+    color: #fb923c;
+  }
+
+  &.tempHot {
+    color: #ef4444;
+  }
+}
+
+.cityStatLabel {
+  font-size: 0.75rem;
+  color: $color-text-tertiary;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}

@@ -3,6 +3,14 @@
 import { useState, useEffect } from "react";
 import styles from "./page.module.scss";
 
+type CityWeather = {
+  name: string;
+  temperature: number;
+  feelsLike: number;
+  description: string;
+  humidity: number;
+};
+
 export default function CountdownPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [customDate, setCustomDate] = useState("");
@@ -10,6 +18,8 @@ export default function CountdownPage() {
   const [savedCustomCountdowns, setSavedCustomCountdowns] = useState<
     Array<{ title: string; date: string }>
   >([]);
+  const [weatherData, setWeatherData] = useState<CityWeather[]>([]);
+  const [isLoadingWeather, setIsLoadingWeather] = useState(true);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -18,8 +28,92 @@ export default function CountdownPage() {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        const response = await fetch("/api/weather");
+        if (response.ok) {
+          const data = await response.json();
+          setWeatherData(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch weather:", error);
+      } finally {
+        setIsLoadingWeather(false);
+      }
+    };
+
+    fetchWeather();
+    // Refresh weather every 10 minutes
+    const weatherInterval = setInterval(fetchWeather, 10 * 60 * 1000);
+    return () => clearInterval(weatherInterval);
+  }, []);
+
   const summerStart = new Date("2026-06-21");
   const midsummer = new Date("2026-06-20"); // Midsommarafton
+
+  // Cities with time zones
+  const cities = [
+    {
+      name: "Barcelona",
+      flag: "🇪🇸",
+      timezone: "Europe/Madrid",
+      country: "Spain",
+    },
+    {
+      name: "Athens",
+      flag: "🇬🇷",
+      timezone: "Europe/Athens",
+      country: "Greece",
+    },
+    {
+      name: "Rome",
+      flag: "🇮🇹",
+      timezone: "Europe/Rome",
+      country: "Italy",
+    },
+    {
+      name: "Lisbon",
+      flag: "🇵🇹",
+      timezone: "Europe/Lisbon",
+      country: "Portugal",
+    },
+    {
+      name: "Nice",
+      flag: "🇫🇷",
+      timezone: "Europe/Paris",
+      country: "France",
+    },
+    {
+      name: "Dubrovnik",
+      flag: "🇭🇷",
+      timezone: "Europe/Zagreb",
+      country: "Croatia",
+    },
+  ];
+
+  const getCityTemperature = (cityName: string) => {
+    const cityWeather = weatherData.find((w) => w.name === cityName);
+    return cityWeather ? cityWeather.temperature : "...";
+  };
+
+  const getTempColorClass = (temp: number | string) => {
+    if (temp === "...") return "";
+    const t = typeof temp === "string" ? parseInt(temp) : temp;
+    if (t < 5) return styles.tempCold;
+    if (t < 10) return styles.tempCool;
+    if (t < 15) return styles.tempMild;
+    if (t < 25) return styles.tempWarm;
+    return styles.tempHot;
+  };
+
+  const getTimeInCity = (timezone: string) => {
+    return currentDate.toLocaleTimeString("sv-SE", {
+      timeZone: timezone,
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   const getDaysUntil = (targetDate: Date) => {
     const today = new Date();
@@ -146,6 +240,58 @@ export default function CountdownPage() {
             );
           })}
         </div>
+      </div>
+
+      <div className={styles.citiesSection}>
+        <h2 className={styles.sectionTitle}>Sommardestinationer Just Nu</h2>
+        <p className={styles.sectionSubtitle}>
+          Live tid och temperatur i populära sommarmål ☀️
+        </p>
+        {isLoadingWeather ? (
+          <div className={styles.loadingWeather}>
+            <div className={styles.loadingSpinner}>🌍</div>
+            <p>Hämtar väderdata...</p>
+          </div>
+        ) : (
+          <div className={styles.citiesGrid}>
+            {cities.map((city, index) => {
+              const temp = getCityTemperature(city.name);
+              return (
+                <div key={index} className={styles.cityCard}>
+                  <div className={styles.cityHeader}>
+                    <span className={styles.cityFlag}>{city.flag}</span>
+                    <div className={styles.cityInfo}>
+                      <h3 className={styles.cityName}>{city.name}</h3>
+                      <p className={styles.cityCountry}>{city.country}</p>
+                    </div>
+                  </div>
+                  <div className={styles.cityStats}>
+                    <div className={styles.cityStat}>
+                      <div className={styles.cityStatIcon}>🕐</div>
+                      <div className={styles.cityStatValue}>
+                        {getTimeInCity(city.timezone)}
+                      </div>
+                      <div className={styles.cityStatLabel}>Lokal Tid</div>
+                    </div>
+                    <div className={styles.cityStat}>
+                      <div className={styles.cityStatIcon}>🌡️</div>
+                      <div
+                        className={`${styles.cityStatValue} ${getTempColorClass(
+                          temp
+                        )}`}
+                      >
+                        {temp}°C
+                      </div>
+                      <div className={styles.cityStatLabel}>
+                        Live Temperatur
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       <div className={styles.customSection}>

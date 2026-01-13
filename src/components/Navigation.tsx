@@ -14,6 +14,7 @@ export default function Navigation() {
     { href: "/mood", label: "Mood AI" },
     { href: "/countdown", label: "Countdown" },
     { href: "/community", label: "Community" },
+    { href: "/profile", label: "Profile" },
   ];
 
   return (
