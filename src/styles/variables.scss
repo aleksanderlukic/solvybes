@@ -1,0 +1,110 @@
+// Colors
+$color-peach: #fdac74;
+$color-peach-light: #ffe8d5;
+$color-sunset: #ff7a6c;
+$color-sunset-light: #ffcec8;
+$color-purple: #c084fc;
+$color-purple-light: #e9d5ff;
+$color-pink: #f9a8d4;
+$color-lavender: #ddd6fe;
+$color-yellow-warm: #fef3c7;
+
+$color-white: #ffffff;
+$color-text-primary: #f5f5f5;
+$color-text-secondary: rgba(245, 245, 245, 0.7);
+$color-text-tertiary: rgba(245, 245, 245, 0.5);
+
+// Spacing
+$spacing-xs: 0.5rem;
+$spacing-sm: 0.75rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-2xl: 3rem;
+$spacing-3xl: 4rem;
+
+// Border radius
+$radius-sm: 0.5rem;
+$radius-md: 0.75rem;
+$radius-lg: 1rem;
+$radius-xl: 1.5rem;
+$radius-full: 9999px;
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+
+// Mixins
+@mixin card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all $transition-normal;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+@mixin btn-primary {
+  padding: $spacing-sm $spacing-xl;
+  background: linear-gradient(to right, $color-peach, $color-sunset);
+  color: $color-white;
+  font-weight: 600;
+  border-radius: $radius-full;
+  border: none;
+  cursor: pointer;
+  transition: all $transition-normal;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin btn-secondary {
+  padding: $spacing-sm $spacing-xl;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  color: $color-white;
+  font-weight: 600;
+  border-radius: $radius-full;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all $transition-normal;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+@mixin chip {
+  padding: $spacing-xs $spacing-md;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  border-radius: $radius-full;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  &.active {
+    background: linear-gradient(to right, $color-peach, $color-sunset);
+    border-color: transparent;
+  }
+}

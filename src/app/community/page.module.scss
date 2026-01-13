@@ -1,0 +1,551 @@
+@import "../../styles/variables.scss";
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: $spacing-xl $spacing-md;
+
+  @media (min-width: 640px) {
+    padding: $spacing-xl $spacing-xl;
+  }
+
+  @media (min-width: 1024px) {
+    padding: $spacing-2xl $spacing-2xl;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: $spacing-2xl;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-md;
+
+  @media (min-width: 768px) {
+    font-size: 3rem;
+  }
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: $color-text-secondary;
+}
+
+.communityLayout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-xl;
+  max-height: calc(100vh - 280px);
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 300px 1fr;
+  }
+}
+
+.sidebar {
+  @include card;
+  padding: $spacing-xl;
+  height: fit-content;
+  max-height: calc(100vh - 280px);
+  overflow-y: auto;
+
+  @media (min-width: 1024px) {
+    position: sticky;
+    top: 5rem;
+  }
+}
+
+.sidebarTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-md;
+}
+
+.channelList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-2xl;
+}
+
+.channelButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: $color-white;
+  }
+
+  &.active {
+    background: linear-gradient(
+      to right,
+      rgba(253, 172, 116, 0.2),
+      rgba(255, 122, 108, 0.2)
+    );
+    border-color: $color-peach;
+    color: $color-white;
+  }
+}
+
+.channelIcon {
+  font-size: 1.25rem;
+}
+
+.channelName {
+  flex: 1;
+  text-align: left;
+  font-weight: 500;
+}
+
+.messageCount {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: $radius-full;
+}
+
+.onlineUsers {
+  padding-top: $spacing-xl;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.onlineTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: $color-white;
+  margin-bottom: $spacing-md;
+}
+
+.userList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.user {
+  padding: $spacing-sm;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: $radius-md;
+  color: $color-text-secondary;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+
+  &::before {
+    content: "🟢";
+    font-size: 0.5rem;
+  }
+}
+
+.chatArea {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 280px);
+  min-height: 500px;
+}
+
+.chatHeader {
+  padding: $spacing-xl;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chatTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-white;
+}
+
+.messageList {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-xl;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+}
+
+.message {
+  display: flex;
+  gap: $spacing-md;
+  animation: slideIn 0.3s ease-out;
+}
+
+.messageAvatar {
+  font-size: 2rem;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.messageContent {
+  flex: 1;
+}
+
+.messageHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xs;
+}
+
+.messageUser {
+  font-weight: 600;
+  color: $color-white;
+}
+
+.messageTime {
+  font-size: 0.75rem;
+  color: $color-text-tertiary;
+}
+
+.messageText {
+  color: $color-text-secondary;
+  line-height: 1.5;
+  margin-bottom: $spacing-sm;
+}
+
+.likeButton {
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 122, 108, 0.1);
+  border: 1px solid rgba(255, 122, 108, 0.3);
+  border-radius: $radius-full;
+  color: $color-sunset;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 122, 108, 0.2);
+  }
+}
+
+.inputArea {
+  padding: $spacing-xl;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: $spacing-md;
+}
+
+.messageInput {
+  flex: 1;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  color: $color-white;
+  font-size: 1rem;
+  transition: all $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-peach;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &::placeholder {
+    color: $color-text-tertiary;
+  }
+}
+
+.sendButton {
+  @include btn-primary;
+  white-space: nowrap;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-md;
+}
+
+.loginModal {
+  @include card;
+  max-width: 500px;
+  width: 100%;
+  padding: $spacing-3xl;
+  text-align: center;
+}
+
+.createGroupModal {
+  @include card;
+  max-width: 500px;
+  width: 100%;
+  padding: $spacing-2xl;
+}
+
+.modalTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-md;
+}
+
+.modalSubtitle {
+  color: $color-text-secondary;
+  margin-bottom: $spacing-2xl;
+}
+
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-2xl;
+  text-align: left;
+}
+
+.feature {
+  padding: $spacing-sm $spacing-md;
+  background: rgba(253, 172, 116, 0.1);
+  border-left: 3px solid $color-peach;
+  border-radius: $radius-md;
+  color: $color-text-primary;
+}
+
+.loginInput {
+  width: 100%;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  color: $color-white;
+  font-size: 1rem;
+  transition: all $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-peach;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &::placeholder {
+    color: $color-text-tertiary;
+  }
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.errorMessage {
+  padding: $spacing-md;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: $radius-md;
+  color: #fca5a5;
+  font-size: 0.875rem;
+  margin-bottom: $spacing-md;
+  text-align: center;
+}
+
+.switchMode {
+  margin-top: $spacing-xl;
+  text-align: center;
+  color: $color-text-secondary;
+  font-size: 0.875rem;
+}
+
+.switchButton {
+  background: none;
+  border: none;
+  color: $color-peach;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.875rem;
+  transition: all $transition-fast;
+
+  &:hover {
+    color: $color-sunset;
+  }
+}
+
+.loginButtons {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.loginButton {
+  @include btn-primary;
+  flex: 1;
+}
+
+.guestButton {
+  @include btn-secondary;
+  flex: 1;
+}
+
+.cancelButton {
+  @include btn-secondary;
+  flex: 1;
+}
+
+.tabs {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xl;
+  justify-content: center;
+}
+
+.tab {
+  padding: $spacing-md $spacing-xl;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: all $transition-fast;
+  font-weight: 500;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: $color-white;
+  }
+
+  &.activeTab {
+    background: linear-gradient(
+      to right,
+      rgba(253, 172, 116, 0.2),
+      rgba(255, 122, 108, 0.2)
+    );
+    border-color: $color-peach;
+    color: $color-white;
+  }
+}
+
+.onlineDot {
+  font-size: 0.5rem;
+}
+
+.groupsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.createButton {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: linear-gradient(to right, $color-peach, $color-sunset);
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $transition-fast;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-3xl;
+}
+
+.placeholderIcon {
+  font-size: 5rem;
+  margin-bottom: $spacing-xl;
+  opacity: 0.5;
+}
+
+.placeholderText {
+  font-size: 1.125rem;
+  color: $color-text-tertiary;
+}
+
+.selectTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: $color-white;
+  margin: $spacing-xl 0 $spacing-md;
+}
+
+.memberList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: $spacing-xl;
+}
+
+.memberButton {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-md;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: $color-white;
+  }
+
+  &.selected {
+    background: rgba(253, 172, 116, 0.2);
+    border-color: $color-peach;
+    color: $color-white;
+  }
+}
+
+.modalButtons {
+  display: flex;
+  gap: $spacing-md;
+}

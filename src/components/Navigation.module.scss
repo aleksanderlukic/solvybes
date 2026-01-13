@@ -1,0 +1,78 @@
+@import "../styles/variables.scss";
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+
+  @media (min-width: 640px) {
+    padding: 0 $spacing-xl;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 0 $spacing-2xl;
+  }
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(
+    to right,
+    $color-peach-light,
+    $color-sunset-light
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.links {
+  display: flex;
+  gap: $spacing-xs;
+
+  @media (min-width: 768px) {
+    gap: $spacing-sm;
+  }
+}
+
+.link {
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-full;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all $transition-fast;
+  color: rgba(255, 255, 255, 0.8);
+
+  @media (min-width: 768px) {
+    font-size: 1rem;
+  }
+
+  &:hover {
+    color: $color-white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: $color-white;
+  }
+}

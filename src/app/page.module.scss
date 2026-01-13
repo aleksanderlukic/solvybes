@@ -1,0 +1,170 @@
+@import "../styles/variables.scss";
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: $spacing-2xl $spacing-md;
+
+  @media (min-width: 640px) {
+    padding: $spacing-2xl $spacing-xl;
+  }
+
+  @media (min-width: 1024px) {
+    padding: $spacing-2xl $spacing-2xl;
+  }
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 5rem;
+  margin-top: $spacing-2xl;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: $spacing-xl;
+  background: linear-gradient(
+    to right,
+    $color-peach-light,
+    $color-sunset-light,
+    $color-purple-light
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+
+  @media (min-width: 768px) {
+    font-size: 4.5rem;
+  }
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-2xl;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (min-width: 768px) {
+    font-size: 1.5rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  justify-content: center;
+  margin-bottom: $spacing-2xl;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+  }
+}
+
+.btnPrimary {
+  @include btn-primary;
+  padding: $spacing-md $spacing-xl;
+  font-size: 1.125rem;
+}
+
+.btnSecondary {
+  @include btn-secondary;
+  padding: $spacing-md $spacing-xl;
+  font-size: 1.125rem;
+}
+
+.filters {
+  display: flex;
+  gap: $spacing-sm;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.chip {
+  @include chip;
+}
+
+.section {
+  margin-bottom: $spacing-3xl;
+}
+
+.sectionTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-xl;
+}
+
+.videoGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-xl;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  @include card;
+  max-width: 48rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.quote {
+  font-size: 1.25rem;
+  color: $color-text-primary;
+  font-style: italic;
+  margin-bottom: $spacing-md;
+}
+
+.quoteAuthor {
+  color: $color-text-tertiary;
+}
+
+.countdownCard {
+  @include card;
+  max-width: 36rem;
+  margin: 0 auto;
+  text-align: center;
+  cursor: pointer;
+  transition: transform $transition-normal;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.countdownTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-md;
+}
+
+.countdownNumber {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(
+    to right,
+    $color-peach-light,
+    $color-sunset-light
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.countdownLabel {
+  color: $color-text-secondary;
+  margin-top: $spacing-sm;
+}

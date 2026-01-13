@@ -1,0 +1,272 @@
+@import "../../styles/variables.scss";
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: $spacing-2xl $spacing-md;
+
+  @media (min-width: 640px) {
+    padding: $spacing-2xl $spacing-xl;
+  }
+
+  @media (min-width: 1024px) {
+    padding: $spacing-3xl $spacing-2xl;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: $spacing-3xl;
+}
+
+.icon {
+  font-size: 4rem;
+  margin-bottom: $spacing-md;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-md;
+
+  @media (min-width: 768px) {
+    font-size: 3rem;
+  }
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: $color-text-secondary;
+}
+
+.actionGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-xl;
+  margin-bottom: $spacing-3xl;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.actionCard {
+  @include card;
+  text-align: center;
+  cursor: pointer;
+  transition: all $transition-normal;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(253, 172, 116, 0.3);
+    border-color: $color-peach;
+  }
+
+  &:active {
+    transform: translateY(-2px);
+  }
+}
+
+.actionIcon {
+  font-size: 3rem;
+  margin-bottom: $spacing-md;
+}
+
+.actionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-sm;
+}
+
+.actionDescription {
+  color: $color-text-secondary;
+}
+
+.resultCard {
+  @include card;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.resultHeader {
+  margin-bottom: $spacing-xl;
+}
+
+.aiLabel {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(
+    to right,
+    rgba(253, 172, 116, 0.3),
+    rgba(255, 122, 108, 0.3)
+  );
+  border: 1px solid rgba(253, 172, 116, 0.5);
+  border-radius: $radius-full;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: $color-peach;
+  margin-bottom: $spacing-md;
+}
+
+.resultTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-white;
+  margin: 0;
+}
+
+.quote {
+  font-size: 1.5rem;
+  font-style: italic;
+  color: $color-peach;
+  line-height: 1.6;
+  margin-bottom: $spacing-md;
+  min-height: 4rem;
+}
+
+.cursor {
+  animation: blink 1s infinite;
+  color: $color-peach;
+}
+
+.tipsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 $spacing-xl;
+
+  li {
+    padding: $spacing-md;
+    padding-left: 3.5rem;
+    margin-bottom: $spacing-sm;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: $radius-md;
+    border-left: 3px solid $color-peach;
+    color: $color-text-primary;
+    position: relative;
+    opacity: 0;
+    animation: slideIn 0.5s ease-out forwards;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.tipNumber {
+  position: absolute;
+  left: $spacing-md;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  background: linear-gradient(135deg, $color-peach, $color-sunset);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: white;
+}
+
+.loadingCard {
+  @include card;
+  text-align: center;
+  padding: $spacing-3xl;
+}
+
+.aiIcon {
+  font-size: 4rem;
+  margin-bottom: $spacing-xl;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.loadingDots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: $spacing-md;
+
+  span {
+    width: 0.75rem;
+    height: 0.75rem;
+    background: $color-peach;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+
+    &:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+  }
+}
+
+.loadingText {
+  color: $color-text-secondary;
+  font-size: 1.125rem;
+}
+
+.regenerateButton {
+  @include btn-secondary;
+  width: 100%;
+  margin-top: $spacing-md;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}

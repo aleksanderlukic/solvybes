@@ -1,0 +1,59 @@
+@import "../styles/variables.scss";
+
+.card {
+  @include card;
+  cursor: pointer;
+  height: 100%;
+}
+
+.thumbnail {
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(
+    to bottom right,
+    rgba(253, 172, 116, 0.2),
+    rgba(255, 122, 108, 0.2)
+  );
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-md;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $transition-normal;
+
+  svg {
+    width: 4rem;
+    height: 4rem;
+    color: rgba(255, 255, 255, 0.5);
+    transition: color $transition-fast;
+  }
+}
+
+.card:hover .thumbnail svg {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: $color-white;
+  margin-bottom: $spacing-sm;
+  transition: color $transition-fast;
+}
+
+.card:hover .title {
+  color: $color-peach-light;
+}
+
+.tags {
+  display: flex;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 0.75rem;
+  padding: 0.25rem $spacing-sm;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: $radius-full;
+}
