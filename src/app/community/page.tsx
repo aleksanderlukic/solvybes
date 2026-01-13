@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useBlockedUsers } from "@/contexts/BlockedUsersContext";
+import { useUserProfile } from "@/contexts/UserProfileContext";
 import styles from "./page.module.scss";
 
 type Message = {
@@ -74,6 +75,7 @@ export default function CommunityPage() {
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
   const [replyText, setReplyText] = useState("");
   const { blockedUsers, blockUser, isBlocked } = useBlockedUsers();
+  const { userProfile } = useUserProfile();
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportingMessageId, setReportingMessageId] = useState<number | null>(
     null
@@ -187,7 +189,7 @@ export default function CommunityPage() {
       const newMsg: Message = {
         id: messages.length + 1,
         user: username || "Guest",
-        avatar: "😎",
+        avatar: userProfile.profileImage || userProfile.avatar,
         message: newMessage,
         time: new Date().toLocaleTimeString("sv-SE", {
           hour: "2-digit",
@@ -214,7 +216,7 @@ export default function CommunityPage() {
                   {
                     id: Date.now(),
                     user: username || "Guest",
-                    avatar: "😎",
+                    avatar: userProfile.profileImage || userProfile.avatar,
                     message: replyText,
                     time: new Date().toLocaleTimeString("sv-SE", {
                       hour: "2-digit",
@@ -859,7 +861,13 @@ export default function CommunityPage() {
                   .filter((m) => !blockedUsers.includes(m.user))
                   .map((msg) => (
                     <div key={msg.id} className={styles.message}>
-                      <div className={styles.messageAvatar}>{msg.avatar}</div>
+                      <div className={styles.messageAvatar}>
+                        {msg.avatar.startsWith("data:image") ? (
+                          <img src={msg.avatar} alt={msg.user} />
+                        ) : (
+                          msg.avatar
+                        )}
+                      </div>
                       <div className={styles.messageContent}>
                         <div className={styles.messageHeader}>
                           <span className={styles.messageUser}>{msg.user}</span>
@@ -952,7 +960,14 @@ export default function CommunityPage() {
                                   className={styles.replyItem}
                                 >
                                   <div className={styles.messageAvatar}>
-                                    {reply.avatar}
+                                    {reply.avatar.startsWith("data:image") ? (
+                                      <img
+                                        src={reply.avatar}
+                                        alt={reply.user}
+                                      />
+                                    ) : (
+                                      reply.avatar
+                                    )}
                                   </div>
                                   <div className={styles.messageContent}>
                                     <div className={styles.messageHeader}>

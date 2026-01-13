@@ -83,19 +83,65 @@
 }
 
 .avatarPreview {
-  font-size: 4rem;
-  width: 6rem;
-  height: 6rem;
+  width: 8rem;
+  height: 8rem;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.emojiAvatar {
+  font-size: 4rem;
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarButtons {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
 }
 
 .changeAvatarButton {
   @include btn-secondary;
   padding: $spacing-sm $spacing-lg;
+}
+
+.uploadButton {
+  @include btn-primary;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+}
+
+.fileInput {
+  display: none;
+}
+
+.removeButton {
+  padding: $spacing-sm $spacing-lg;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: $radius-md;
+  color: #ef4444;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+  }
 }
 
 .changePasswordButton {
@@ -315,4 +361,81 @@
 .emptySubtext {
   font-size: 0.875rem;
   opacity: 0.7;
+}
+
+// Avatar Picker Modal
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-md;
+}
+
+.avatarPickerModal {
+  @include card;
+  max-width: 600px;
+  width: 100%;
+  padding: $spacing-2xl;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modalTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-sm;
+  text-align: center;
+}
+
+.modalSubtitle {
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xl;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.avatarGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xl;
+}
+
+.avatarOption {
+  aspect-ratio: 1;
+  font-size: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(253, 172, 116, 0.5);
+    transform: scale(1.1);
+  }
+
+  &.selected {
+    background: rgba(253, 172, 116, 0.2);
+    border-color: $color-peach;
+    box-shadow: 0 0 20px rgba(253, 172, 116, 0.3);
+  }
+}
+
+.closeButton {
+  @include btn-secondary;
+  width: 100%;
+  padding: $spacing-md;
 }

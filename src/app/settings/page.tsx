@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useBlockedUsers } from "@/contexts/BlockedUsersContext";
+import { useUserProfile } from "@/contexts/UserProfileContext";
 import styles from "./page.module.scss";
 
 export default function SettingsPage() {
@@ -17,6 +18,132 @@ export default function SettingsPage() {
   const [showFavorites, setShowFavorites] = useState(false);
   const [saved, setSaved] = useState(false);
   const { blockedUsers, unblockUser } = useBlockedUsers();
+  const { userProfile, setAvatar, setProfileImage } = useUserProfile();
+  const [showAvatarPicker, setShowAvatarPicker] = useState(false);
+
+  const avatarOptions = [
+    "👨‍💻",
+    "👩‍💻",
+    "👨",
+    "👩",
+    "👦",
+    "👧",
+    "🧑",
+    "👴",
+    "👵",
+    "👨‍🦰",
+    "👩‍🦰",
+    "👨‍🦱",
+    "👩‍🦱",
+    "👨‍🦳",
+    "👩‍🦳",
+    "👨‍🦲",
+    "👩‍🦲",
+    "🧔",
+    "👱‍♂️",
+    "👱‍♀️",
+    "👨‍🦲",
+    "👩‍🦲",
+    "🤵",
+    "👰",
+    "🤴",
+    "👸",
+    "😀",
+    "😃",
+    "😄",
+    "😁",
+    "😆",
+    "😅",
+    "🤣",
+    "😂",
+    "🙂",
+    "😊",
+    "😇",
+    "🥰",
+    "😍",
+    "🤩",
+    "😘",
+    "😗",
+    "😚",
+    "😙",
+    "😋",
+    "😛",
+    "🤓",
+    "🧐",
+    "🤠",
+    "🥳",
+    "😎",
+    "🤡",
+    "🥸",
+    "🤗",
+    "😺",
+    "😸",
+    "🐶",
+    "🐱",
+    "🐭",
+    "🐹",
+    "🐰",
+    "🦊",
+    "🐻",
+    "🐼",
+    "🐨",
+    "🐯",
+    "🦁",
+    "🐮",
+    "🐷",
+    "🐸",
+    "🐵",
+    "🐔",
+    "🐧",
+    "🐦",
+    "🦆",
+    "🦅",
+    "🦉",
+    "🦇",
+    "🐺",
+    "🐗",
+    "🐴",
+    "🦄",
+    "🐝",
+    "🐛",
+    "🦋",
+    "🐌",
+  ];
+
+  const handleAvatarSelect = (selectedAvatar: string) => {
+    setAvatar(selectedAvatar);
+    setShowAvatarPicker(false);
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Bilden är för stor. Max storlek är 5MB.");
+        return;
+      }
+
+      // Check file type
+      if (!file.type.startsWith("image/")) {
+        alert("Vänligen välj en bildfil.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setProfileImage(base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    if (confirm("Vill du ta bort din profilbild?")) {
+      setProfileImage(undefined);
+    }
+  };
 
   const handleSave = () => {
     setSaved(true);
@@ -62,10 +189,44 @@ export default function SettingsPage() {
             </div>
 
             <div className={styles.avatarSection}>
-              <div className={styles.avatarPreview}>👨‍💻</div>
-              <button className={styles.changeAvatarButton}>
-                Ändra Avatar
-              </button>
+              <div className={styles.avatarPreview}>
+                {userProfile.profileImage ? (
+                  <img
+                    src={userProfile.profileImage}
+                    alt="Profile"
+                    className={styles.profileImage}
+                  />
+                ) : (
+                  <span className={styles.emojiAvatar}>
+                    {userProfile.avatar}
+                  </span>
+                )}
+              </div>
+              <div className={styles.avatarButtons}>
+                <button
+                  onClick={() => setShowAvatarPicker(true)}
+                  className={styles.changeAvatarButton}
+                >
+                  🎭 Välj Emoji
+                </button>
+                <label className={styles.uploadButton}>
+                  📷 Ladda upp Bild
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className={styles.fileInput}
+                  />
+                </label>
+                {userProfile.profileImage && (
+                  <button
+                    onClick={handleRemoveImage}
+                    className={styles.removeButton}
+                  >
+                    🗑️ Ta bort Bild
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </section>
@@ -260,6 +421,42 @@ export default function SettingsPage() {
         </button>
         {saved && <span className={styles.savedMessage}>✓ Sparat!</span>}
       </div>
+
+      {showAvatarPicker && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setShowAvatarPicker(false)}
+        >
+          <div
+            className={styles.avatarPickerModal}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className={styles.modalTitle}>Välj din Avatar</h2>
+            <p className={styles.modalSubtitle}>
+              Klicka på en avatar för att välja den
+            </p>
+            <div className={styles.avatarGrid}>
+              {avatarOptions.map((avatar, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleAvatarSelect(avatar)}
+                  className={`${styles.avatarOption} ${
+                    userProfile.avatar === avatar ? styles.selected : ""
+                  }`}
+                >
+                  {avatar}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setShowAvatarPicker(false)}
+              className={styles.closeButton}
+            >
+              Stäng
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

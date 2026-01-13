@@ -4,6 +4,7 @@ import AnimatedBackground from "@/components/AnimatedBackground";
 import Navigation from "@/components/Navigation";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { BlockedUsersProvider } from "@/contexts/BlockedUsersContext";
+import { UserProfileProvider } from "@/contexts/UserProfileContext";
 
 export const metadata: Metadata = {
   title: "Solvybes - Fly vintern. Känn solen.",
@@ -21,11 +22,13 @@ export default function RootLayout({
       <body>
         <FavoritesProvider>
           <BlockedUsersProvider>
-            <AnimatedBackground />
-            <Navigation />
-            <main style={{ paddingTop: "4rem", minHeight: "100vh" }}>
-              {children}
-            </main>
+            <UserProfileProvider>
+              <AnimatedBackground />
+              <Navigation />
+              <main style={{ paddingTop: "4rem", minHeight: "100vh" }}>
+                {children}
+              </main>
+            </UserProfileProvider>
           </BlockedUsersProvider>
         </FavoritesProvider>
       </body>

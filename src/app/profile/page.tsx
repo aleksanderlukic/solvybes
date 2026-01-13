@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useUserProfile } from "@/contexts/UserProfileContext";
 import styles from "./page.module.scss";
 
 export default function ProfilePage() {
@@ -16,6 +17,7 @@ export default function ProfilePage() {
   const [registerUsername, setRegisterUsername] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const { userProfile } = useUserProfile();
   const [registeredUsers, setRegisteredUsers] = useState([
     { name: "Sofia", username: "sofia123", password: "password123" },
     { name: "Erik", username: "erik456", password: "password456" },
@@ -29,7 +31,7 @@ export default function ProfilePage() {
   const user = {
     name: username || "Aleksander",
     username: `@${username?.toLowerCase() || "aleksander"}`,
-    avatar: "👨‍💻",
+    avatar: userProfile.avatar,
     bio: "Summer enthusiast ☀️ | Travel lover 🌍 | Beach vibes 🏖️",
     joinedDate: "December 2025",
     stats: {
@@ -307,7 +309,17 @@ export default function ProfilePage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.profileCard}>
-          <div className={styles.avatarLarge}>{user.avatar}</div>
+          <div className={styles.avatarLarge}>
+            {userProfile.profileImage ? (
+              <img
+                src={userProfile.profileImage}
+                alt={user.name}
+                className={styles.avatarImage}
+              />
+            ) : (
+              user.avatar
+            )}
+          </div>
           <div className={styles.userInfo}>
             <h1 className={styles.name}>{user.name}</h1>
             <p className={styles.username}>{user.username}</p>

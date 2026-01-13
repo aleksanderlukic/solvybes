@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useBlockedUsers } from "@/contexts/BlockedUsersContext";
+import { useUserProfile } from "@/contexts/UserProfileContext";
 import styles from "./page.module.scss";
 
 type AudioMode = "original" | "music" | "radio" | "silent";
@@ -70,6 +71,7 @@ export default function WatchPage() {
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
   const [replyText, setReplyText] = useState("");
   const { blockedUsers, blockUser, isBlocked } = useBlockedUsers();
+  const { userProfile } = useUserProfile();
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportingCommentId, setReportingCommentId] = useState<number | null>(
     null
@@ -96,7 +98,7 @@ export default function WatchPage() {
         {
           id: comments.length + 1,
           user: "You",
-          avatar: "👤",
+          avatar: userProfile.profileImage || userProfile.avatar,
           message: newComment,
           time: "Just now",
           likes: 0,
@@ -122,7 +124,7 @@ export default function WatchPage() {
                   {
                     id: Date.now(),
                     user: "You",
-                    avatar: "👤",
+                    avatar: userProfile.profileImage || userProfile.avatar,
                     message: replyText,
                     time: "Just now",
                     likes: 0,
@@ -605,7 +607,17 @@ export default function WatchPage() {
         <h2 className={styles.commentsTitle}>Comments ({comments.length})</h2>
 
         <div className={styles.addComment}>
-          <div className={styles.commentAvatar}>👤</div>
+          <div className={styles.commentAvatar}>
+            {userProfile.profileImage ? (
+              <img
+                src={userProfile.profileImage}
+                alt="Your avatar"
+                className={styles.avatarImage}
+              />
+            ) : (
+              userProfile.avatar
+            )}
+          </div>
           <input
             type="text"
             placeholder="Add a comment..."
@@ -624,7 +636,17 @@ export default function WatchPage() {
             .filter((c) => !blockedUsers.includes(c.user))
             .map((comment) => (
               <div key={comment.id} className={styles.commentItem}>
-                <div className={styles.commentAvatar}>{comment.avatar}</div>
+                <div className={styles.commentAvatar}>
+                  {comment.avatar.startsWith("data:image") ? (
+                    <img
+                      src={comment.avatar}
+                      alt={comment.user}
+                      className={styles.avatarImage}
+                    />
+                  ) : (
+                    comment.avatar
+                  )}
+                </div>
                 <div className={styles.commentContent}>
                   <div className={styles.commentHeader}>
                     <span className={styles.commentUser}>{comment.user}</span>
@@ -717,7 +739,15 @@ export default function WatchPage() {
                         .map((reply) => (
                           <div key={reply.id} className={styles.replyItem}>
                             <div className={styles.commentAvatar}>
-                              {reply.avatar}
+                              {reply.avatar.startsWith("data:image") ? (
+                                <img
+                                  src={reply.avatar}
+                                  alt={reply.user}
+                                  className={styles.avatarImage}
+                                />
+                              ) : (
+                                reply.avatar
+                              )}
                             </div>
                             <div className={styles.commentContent}>
                               <div className={styles.commentHeader}>
