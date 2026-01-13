@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
 import styles from "./page.module.scss";
 
@@ -26,6 +26,8 @@ export default function WatchPage() {
   const [radioVolume, setRadioVolume] = useState(50);
   const [selectedRadio, setSelectedRadio] = useState("p1");
   const [selectedMusic, setSelectedMusic] = useState("lofi");
+  const musicAudioRef = useRef<HTMLAudioElement>(null);
+  const radioAudioRef = useRef<HTMLAudioElement>(null);
   const [comments, setComments] = useState<Comment[]>([
     {
       id: 1,
@@ -126,47 +128,108 @@ export default function WatchPage() {
   ];
 
   const radioStations = [
-    { id: "p1", name: "🇸🇪 P1", description: "Nyheter och samhälle" },
-    { id: "p2", name: "🇸🇪 P2", description: "Klassisk musik och kultur" },
-    { id: "p3", name: "🇸🇪 P3", description: "Pop och ungdom" },
-    { id: "p4", name: "🇸🇪 P4", description: "Lokalt och regionalt" },
+    {
+      id: "p1",
+      name: "🇸🇪 P1",
+      description: "Nyheter och samhälle",
+      url: "https://sverigesradio.se/topsy/direkt/164-hi-mp3.m3u",
+    },
+    {
+      id: "p2",
+      name: "🇸🇪 P2",
+      description: "Klassisk musik och kultur",
+      url: "https://sverigesradio.se/topsy/direkt/163-hi-mp3.m3u",
+    },
+    {
+      id: "p3",
+      name: "🇸🇪 P3",
+      description: "Pop och ungdom",
+      url: "https://sverigesradio.se/topsy/direkt/164-hi-mp3.m3u",
+    },
+    {
+      id: "p4",
+      name: "🇸🇪 P4",
+      description: "Lokalt och regionalt",
+      url: "https://sverigesradio.se/topsy/direkt/701-hi-mp3.m3u",
+    },
     {
       id: "summer",
       name: "☀️ Summer Hits Radio",
       description: "Sommarens bästa låtar",
+      url: "https://stream.zeno.fm/f3wvbbqmdg8uv",
     },
     {
       id: "beach",
       name: "🏖️ Beach Vibes Radio",
       description: "Avslappnade strandlåtar",
+      url: "https://stream.zeno.fm/8wwc86zs1p8uv",
     },
     {
       id: "tropical",
       name: "🌴 Tropical House Radio",
       description: "Tropical house och chill",
+      url: "https://stream.zeno.fm/f7ty8zqmdg8uv",
     },
-    { id: "bbc1", name: "🇬🇧 BBC Radio 1", description: "UK Pop och Rock" },
+    {
+      id: "bbc1",
+      name: "🇬🇧 BBC Radio 1",
+      description: "UK Pop och Rock",
+      url: "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_one",
+    },
     {
       id: "bbc2",
       name: "🇬🇧 BBC Radio 2",
       description: "UK Adult Contemporary",
+      url: "http://stream.live.vc.bbcmedia.co.uk/bbc_radio_two",
     },
-    { id: "capitalfm", name: "🇬🇧 Capital FM", description: "UK Pop Hits" },
-    { id: "kiis", name: "🇺🇸 KIIS FM", description: "USA Top 40 Hits" },
-    { id: "z100", name: "🇺🇸 Z100", description: "New York's Hit Music" },
-    { id: "power106", name: "🇺🇸 Power 106", description: "Hip Hop & R&B" },
+    {
+      id: "capitalfm",
+      name: "🇬🇧 Capital FM",
+      description: "UK Pop Hits",
+      url: "https://media-ssl.musicradio.com/CapitalUK",
+    },
+    {
+      id: "kiis",
+      name: "🇺🇸 KIIS FM",
+      description: "USA Top 40 Hits",
+      url: "https://stream.revma.ihrhls.com/zc185",
+    },
+    {
+      id: "z100",
+      name: "🇺🇸 Z100",
+      description: "New York's Hit Music",
+      url: "https://stream.revma.ihrhls.com/zc181",
+    },
+    {
+      id: "power106",
+      name: "🇺🇸 Power 106",
+      description: "Hip Hop & R&B",
+      url: "https://stream.revma.ihrhls.com/zc5414",
+    },
     {
       id: "losradio",
       name: "🇪🇸 Los 40",
       description: "Spaniens största hitradio",
+      url: "https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40.mp3",
     },
     {
       id: "cadenadial",
       name: "🇪🇸 Cadena Dial",
       description: "Spansk popmusik",
+      url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CADENADIAL.mp3",
     },
-    { id: "sfera", name: "🇬🇷 Sfera Radio", description: "Grekisk top 40" },
-    { id: "antenna", name: "🇬🇷 Antenna Radio", description: "Grekiska hits" },
+    {
+      id: "sfera",
+      name: "🇬🇷 Sfera Radio",
+      description: "Grekisk top 40",
+      url: "https://sfera.live24.gr/sfera4132",
+    },
+    {
+      id: "antenna",
+      name: "🇬🇷 Antenna Radio",
+      description: "Grekiska hits",
+      url: "https://antennastre.live24.gr/antenna",
+    },
   ];
 
   const musicOptions = [
@@ -192,24 +255,95 @@ export default function WatchPage() {
       id: "lofi",
       name: "Lo-Fi Hip Hop",
       description: "Studie- och avkopplingsmusik",
+      url: "https://stream.zeno.fm/f3wvbbqmdg8uv",
     },
     {
       id: "ambient",
       name: "Ambient",
       description: "Atmosfärisk bakgrundsmusik",
+      url: "https://stream.zeno.fm/8wwc86zs1p8uv",
     },
-    { id: "jazz", name: "Smooth Jazz", description: "Lugn jazzmusik" },
-    { id: "classical", name: "Classical", description: "Klassisk musik" },
+    {
+      id: "jazz",
+      name: "Smooth Jazz",
+      description: "Lugn jazzmusik",
+      url: "https://stream.zeno.fm/f7ty8zqmdg8uv",
+    },
+    {
+      id: "classical",
+      name: "Classical",
+      description: "Klassisk musik",
+      url: "https://stream.zeno.fm/h5hc2akmdg8uv",
+    },
     {
       id: "nature",
       name: "Nature Sounds",
       description: "Naturljud och fågelsång",
+      url: "https://stream.zeno.fm/9yv8q8vmdg8uv",
     },
-    { id: "beach", name: "Beach Vibes", description: "Somriga strandlåtar" },
+    {
+      id: "beach",
+      name: "Beach Vibes",
+      description: "Somriga strandlåtar",
+      url: "https://stream.zeno.fm/y8wvq8vmdg8uv",
+    },
   ];
+
+  useEffect(() => {
+    // Control music playback
+    if (activeMode === "music" && musicAudioRef.current) {
+      const selectedOption = musicOptions.find((m) => m.id === selectedMusic);
+      if (selectedOption && !selectedOption.isExternal && selectedOption.url) {
+        musicAudioRef.current.src = selectedOption.url;
+        musicAudioRef.current.volume = musicVolume / 100;
+        musicAudioRef.current
+          .play()
+          .catch((e) => console.log("Music play failed:", e));
+      }
+    } else if (musicAudioRef.current) {
+      musicAudioRef.current.pause();
+    }
+
+    // Control radio playback
+    if (activeMode === "radio" && radioAudioRef.current) {
+      const selectedStation = radioStations.find((r) => r.id === selectedRadio);
+      if (selectedStation?.url) {
+        radioAudioRef.current.src = selectedStation.url;
+        radioAudioRef.current.volume = radioVolume / 100;
+        radioAudioRef.current
+          .play()
+          .catch((e) => console.log("Radio play failed:", e));
+      }
+    } else if (radioAudioRef.current) {
+      radioAudioRef.current.pause();
+    }
+  }, [
+    activeMode,
+    selectedMusic,
+    selectedRadio,
+    musicVolume,
+    radioVolume,
+    musicOptions,
+    radioStations,
+  ]);
+
+  useEffect(() => {
+    if (musicAudioRef.current) {
+      musicAudioRef.current.volume = musicVolume / 100;
+    }
+  }, [musicVolume]);
+
+  useEffect(() => {
+    if (radioAudioRef.current) {
+      radioAudioRef.current.volume = radioVolume / 100;
+    }
+  }, [radioVolume]);
 
   return (
     <div className={styles.container}>
+      <audio ref={musicAudioRef} loop />
+      <audio ref={radioAudioRef} />
+
       <div className={styles.grid}>
         <div className={styles.videoSection}>
           <div className={styles.card}>
