@@ -5,14 +5,30 @@ import Link from "next/link";
 import styles from "./page.module.scss";
 
 export default function ProfilePage() {
+  // Authentication states
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(true);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [username, setUsername] = useState("");
+  const [loginUsername, setLoginUsername] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [registerName, setRegisterName] = useState("");
+  const [registerUsername, setRegisterUsername] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [registeredUsers, setRegisteredUsers] = useState([
+    { name: "Sofia", username: "sofia123", password: "password123" },
+    { name: "Erik", username: "erik456", password: "password456" },
+  ]);
+
   const [activeTab, setActiveTab] = useState<"videos" | "stats" | "settings">(
     "videos"
   );
 
   // Mock user data
   const user = {
-    name: "Aleksander",
-    username: "@aleksander",
+    name: username || "Aleksander",
+    username: `@${username?.toLowerCase() || "aleksander"}`,
     avatar: "👨‍💻",
     bio: "Summer enthusiast ☀️ | Travel lover 🌍 | Beach vibes 🏖️",
     joinedDate: "December 2025",
@@ -91,6 +107,201 @@ export default function ProfilePage() {
     },
     { icon: "💬", title: "Chatterbox", description: "Sent 50 messages" },
   ];
+
+  const handleLogin = () => {
+    setErrorMessage("");
+    const foundUser = registeredUsers.find(
+      (u) => u.username === loginUsername && u.password === loginPassword
+    );
+
+    if (foundUser) {
+      setUsername(foundUser.name);
+      setIsLoggedIn(true);
+      setShowLoginModal(false);
+      setLoginUsername("");
+      setLoginPassword("");
+    } else {
+      setErrorMessage("Fel användarnamn eller lösenord");
+    }
+  };
+
+  const handleRegister = () => {
+    setErrorMessage("");
+
+    if (
+      !registerName.trim() ||
+      !registerUsername.trim() ||
+      !registerPassword.trim()
+    ) {
+      setErrorMessage("Alla fält måste fyllas i");
+      return;
+    }
+
+    const userExists = registeredUsers.find(
+      (u) => u.username === registerUsername
+    );
+    if (userExists) {
+      setErrorMessage("Användarnamnet är redan taget");
+      return;
+    }
+
+    setRegisteredUsers([
+      ...registeredUsers,
+      {
+        name: registerName,
+        username: registerUsername,
+        password: registerPassword,
+      },
+    ]);
+
+    setUsername(registerName);
+    setIsLoggedIn(true);
+    setShowLoginModal(false);
+    setRegisterName("");
+    setRegisterUsername("");
+    setRegisterPassword("");
+  };
+
+  const handleGuest = () => {
+    setUsername("Guest");
+    setIsLoggedIn(true);
+    setShowLoginModal(false);
+  };
+
+  if (showLoginModal) {
+    return (
+      <div className={styles.modalOverlay}>
+        <div className={styles.loginModal}>
+          <h2 className={styles.modalTitle}>
+            {isRegistering ? "Registrera dig" : "Välkommen till din profil!"} 👋
+          </h2>
+          <p className={styles.modalSubtitle}>
+            {isRegistering ? "Skapa ett nytt konto" : "Logga in på ditt konto"}
+          </p>
+
+          {!isRegistering ? (
+            <>
+              <div className={styles.formGroup}>
+                <input
+                  type="text"
+                  placeholder="Användarnamn"
+                  value={loginUsername}
+                  onChange={(e) => setLoginUsername(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+                  className={styles.loginInput}
+                />
+                <input
+                  type="password"
+                  placeholder="Lösenord"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+                  className={styles.loginInput}
+                />
+              </div>
+
+              {errorMessage && (
+                <div className={styles.errorMessage}>{errorMessage}</div>
+              )}
+
+              <div className={styles.loginButtons}>
+                <button onClick={handleLogin} className={styles.loginButton}>
+                  🔑 Logga In
+                </button>
+                <button onClick={handleGuest} className={styles.guestButton}>
+                  👤 Fortsätt som Gäst
+                </button>
+              </div>
+
+              <div className={styles.switchMode}>
+                Har du inget konto?{" "}
+                <button
+                  onClick={() => {
+                    setIsRegistering(true);
+                    setErrorMessage("");
+                  }}
+                  className={styles.switchButton}
+                >
+                  Registrera dig här
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={styles.formGroup}>
+                <input
+                  type="text"
+                  placeholder="Namn"
+                  value={registerName}
+                  onChange={(e) => setRegisterName(e.target.value)}
+                  className={styles.loginInput}
+                />
+                <input
+                  type="text"
+                  placeholder="Användarnamn"
+                  value={registerUsername}
+                  onChange={(e) => setRegisterUsername(e.target.value)}
+                  className={styles.loginInput}
+                />
+                <input
+                  type="password"
+                  placeholder="Lösenord"
+                  value={registerPassword}
+                  onChange={(e) => setRegisterPassword(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleRegister()}
+                  className={styles.loginInput}
+                />
+              </div>
+
+              {errorMessage && (
+                <div className={styles.errorMessage}>{errorMessage}</div>
+              )}
+
+              <div className={styles.featureList}>
+                <div className={styles.feature}>
+                  ✓ Track your favorite summer videos
+                </div>
+                <div className={styles.feature}>
+                  ✓ Monitor your viewing statistics
+                </div>
+                <div className={styles.feature}>
+                  ✓ Earn achievements and badges
+                </div>
+                <div className={styles.feature}>
+                  ✓ Customize your profile settings
+                </div>
+                <div className={styles.feature}>
+                  ✓ Connect with friends and groups
+                </div>
+              </div>
+
+              <div className={styles.loginButtons}>
+                <button onClick={handleRegister} className={styles.loginButton}>
+                  ✨ Skapa Konto
+                </button>
+                <button onClick={handleGuest} className={styles.guestButton}>
+                  👤 Fortsätt som Gäst
+                </button>
+              </div>
+
+              <div className={styles.switchMode}>
+                Har du redan ett konto?{" "}
+                <button
+                  onClick={() => {
+                    setIsRegistering(false);
+                    setErrorMessage("");
+                  }}
+                  className={styles.switchButton}
+                >
+                  Logga in här
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>

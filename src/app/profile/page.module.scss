@@ -335,3 +335,129 @@
   color: $color-text-tertiary;
   line-height: 1.5;
 }
+
+// Modal styles
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-md;
+}
+
+.loginModal {
+  @include card;
+  max-width: 500px;
+  width: 100%;
+  padding: $spacing-3xl;
+  text-align: center;
+}
+
+.modalTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-md;
+}
+
+.modalSubtitle {
+  color: $color-text-secondary;
+  margin-bottom: $spacing-2xl;
+}
+
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-2xl;
+  text-align: left;
+}
+
+.feature {
+  padding: $spacing-sm $spacing-md;
+  background: rgba(253, 172, 116, 0.1);
+  border-left: 3px solid $color-peach;
+  border-radius: $radius-md;
+  color: $color-text-primary;
+}
+
+.loginInput {
+  width: 100%;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  color: $color-white;
+  font-size: 1rem;
+  transition: all $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-peach;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &::placeholder {
+    color: $color-text-tertiary;
+  }
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.errorMessage {
+  padding: $spacing-md;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: $radius-md;
+  color: #fca5a5;
+  font-size: 0.875rem;
+  margin-bottom: $spacing-md;
+  text-align: center;
+}
+
+.switchMode {
+  margin-top: $spacing-xl;
+  text-align: center;
+  color: $color-text-secondary;
+  font-size: 0.875rem;
+}
+
+.switchButton {
+  background: none;
+  border: none;
+  color: $color-peach;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.875rem;
+  transition: all $transition-fast;
+
+  &:hover {
+    color: $color-sunset;
+  }
+}
+
+.loginButtons {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.loginButton {
+  @include btn-primary;
+  flex: 1;
+}
+
+.guestButton {
+  @include btn-secondary;
+  flex: 1;
+}

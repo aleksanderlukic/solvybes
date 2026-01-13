@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useBlockedUsers } from "@/contexts/BlockedUsersContext";
 import styles from "./page.module.scss";
 
 export default function SettingsPage() {
@@ -15,6 +16,7 @@ export default function SettingsPage() {
   const [showProfile, setShowProfile] = useState(true);
   const [showFavorites, setShowFavorites] = useState(false);
   const [saved, setSaved] = useState(false);
+  const { blockedUsers, unblockUser } = useBlockedUsers();
 
   const handleSave = () => {
     setSaved(true);
@@ -191,6 +193,48 @@ export default function SettingsPage() {
                 <span className={styles.toggleSlider}></span>
               </label>
             </div>
+          </div>
+        </section>
+
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>🚫 Blockerade Konton</h2>
+          <div className={styles.card}>
+            {blockedUsers.length === 0 ? (
+              <div className={styles.emptyState}>
+                <div className={styles.emptyIcon}>✓</div>
+                <p className={styles.emptyText}>
+                  Du har inga blockerade konton
+                </p>
+                <p className={styles.emptySubtext}>
+                  Blockerade användare visas här
+                </p>
+              </div>
+            ) : (
+              <div className={styles.blockedList}>
+                {blockedUsers.map((user) => (
+                  <div key={user} className={styles.blockedItem}>
+                    <div className={styles.blockedUserInfo}>
+                      <div className={styles.blockedAvatar}>👤</div>
+                      <div className={styles.blockedUsername}>{user}</div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        if (
+                          confirm(
+                            `Vill du avblockera ${user}? De kommer kunna se dina inlägg igen.`
+                          )
+                        ) {
+                          unblockUser(user);
+                        }
+                      }}
+                      className={styles.unblockButton}
+                    >
+                      Avblockera
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 

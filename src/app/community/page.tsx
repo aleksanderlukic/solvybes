@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useBlockedUsers } from "@/contexts/BlockedUsersContext";
 import styles from "./page.module.scss";
 
 type Message = {
@@ -10,6 +11,8 @@ type Message = {
   message: string;
   time: string;
   likes: number;
+  replies?: Message[];
+  isReported?: boolean;
 };
 
 type Channel = {
@@ -68,6 +71,14 @@ export default function CommunityPage() {
   const [newGroupName, setNewGroupName] = useState("");
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [replyingTo, setReplyingTo] = useState<number | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const { blockedUsers, blockUser, isBlocked } = useBlockedUsers();
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportingMessageId, setReportingMessageId] = useState<number | null>(
+    null
+  );
+  const [reportReason, setReportReason] = useState("");
   const [friendRequests, setFriendRequests] = useState<FriendRequest[]>([
     { id: "1", from: "Maria", fromAvatar: "👧", timestamp: "2 min ago" },
     { id: "2", from: "Lucas", fromAvatar: "🧑", timestamp: "1 hour ago" },
@@ -114,6 +125,8 @@ export default function CommunityPage() {
       message: "Just booked my trip to Barcelona! Any tips for must-see spots?",
       time: "10:32",
       likes: 5,
+      replies: [],
+      isReported: false,
     },
     {
       id: 2,
@@ -123,6 +136,8 @@ export default function CommunityPage() {
         "Barcelona is amazing! Don't miss Park Güell and the Gothic Quarter 🏛️",
       time: "10:35",
       likes: 3,
+      replies: [],
+      isReported: false,
     },
     {
       id: 3,
@@ -132,6 +147,8 @@ export default function CommunityPage() {
         "I recommend visiting early morning to avoid crowds. The sunrise there is magical! ☀️",
       time: "10:38",
       likes: 7,
+      replies: [],
+      isReported: false,
     },
     {
       id: 4,
@@ -140,6 +157,8 @@ export default function CommunityPage() {
       message: "Does anyone know good beach spots in Greece for July?",
       time: "10:45",
       likes: 2,
+      replies: [],
+      isReported: false,
     },
     {
       id: 5,
@@ -149,6 +168,8 @@ export default function CommunityPage() {
         "Navagio Beach in Zakynthos is incredible! Crystal clear water 💙",
       time: "10:50",
       likes: 4,
+      replies: [],
+      isReported: false,
     },
   ]);
 
@@ -173,9 +194,84 @@ export default function CommunityPage() {
           minute: "2-digit",
         }),
         likes: 0,
+        replies: [],
+        isReported: false,
       };
       setMessages([...messages, newMsg]);
       setNewMessage("");
+    }
+  };
+
+  const handleReply = (parentId: number) => {
+    if (replyText.trim()) {
+      setMessages(
+        messages.map((msg) =>
+          msg.id === parentId
+            ? {
+                ...msg,
+                replies: [
+                  ...(msg.replies || []),
+                  {
+                    id: Date.now(),
+                    user: username || "Guest",
+                    avatar: "😎",
+                    message: replyText,
+                    time: new Date().toLocaleTimeString("sv-SE", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }),
+                    likes: 0,
+                    isReported: false,
+                  },
+                ],
+              }
+            : msg
+        )
+      );
+      setReplyText("");
+      setReplyingTo(null);
+    }
+  };
+
+  const handleReportMessage = () => {
+    if (reportingMessageId && reportReason) {
+      setMessages(
+        messages.map((msg) =>
+          msg.id === reportingMessageId ? { ...msg, isReported: true } : msg
+        )
+      );
+      setShowReportModal(false);
+      setReportingMessageId(null);
+      setReportReason("");
+      alert("Meddelande anmält. Tack för din feedback!");
+    }
+  };
+
+  const handleBlockUser = (userName: string) => {
+    if (confirm(`Är du säker på att du vill blockera ${userName}?`)) {
+      blockUser(userName);
+      alert(`${userName} har blockerats`);
+    }
+  };
+
+  const handleDeleteMessage = (messageId: number) => {
+    if (confirm("Är du säker på att du vill radera detta meddelande?")) {
+      setMessages(messages.filter((m) => m.id !== messageId));
+    }
+  };
+
+  const handleDeleteReply = (messageId: number, replyId: number) => {
+    if (confirm("Är du säker på att du vill radera detta svar?")) {
+      setMessages(
+        messages.map((m) =>
+          m.id === messageId
+            ? {
+                ...m,
+                replies: m.replies?.filter((r) => r.id !== replyId),
+              }
+            : m
+        )
+      );
     }
   };
 
@@ -759,21 +855,141 @@ export default function CommunityPage() {
             (activeTab === "groups" && activeGroup)) && (
             <>
               <div className={styles.messageList}>
-                {messages.map((msg) => (
-                  <div key={msg.id} className={styles.message}>
-                    <div className={styles.messageAvatar}>{msg.avatar}</div>
-                    <div className={styles.messageContent}>
-                      <div className={styles.messageHeader}>
-                        <span className={styles.messageUser}>{msg.user}</span>
-                        <span className={styles.messageTime}>{msg.time}</span>
+                {messages
+                  .filter((m) => !blockedUsers.includes(m.user))
+                  .map((msg) => (
+                    <div key={msg.id} className={styles.message}>
+                      <div className={styles.messageAvatar}>{msg.avatar}</div>
+                      <div className={styles.messageContent}>
+                        <div className={styles.messageHeader}>
+                          <span className={styles.messageUser}>{msg.user}</span>
+                          <span className={styles.messageTime}>{msg.time}</span>
+                          {msg.isReported && (
+                            <span className={styles.reportedBadge}>
+                              🚩 Anmäld
+                            </span>
+                          )}
+                        </div>
+                        <p className={styles.messageText}>{msg.message}</p>
+                        <div className={styles.messageActions}>
+                          <button className={styles.likeButton}>
+                            ❤️ {msg.likes}
+                          </button>
+                          <button
+                            onClick={() => setReplyingTo(msg.id)}
+                            className={styles.replyButton}
+                          >
+                            💬 Svara
+                          </button>
+                          {msg.user === username || msg.user === "Guest" ? (
+                            <button
+                              onClick={() => handleDeleteMessage(msg.id)}
+                              className={styles.deleteButton}
+                            >
+                              🗑️ Radera
+                            </button>
+                          ) : (
+                            <>
+                              <button
+                                onClick={() => {
+                                  setReportingMessageId(msg.id);
+                                  setShowReportModal(true);
+                                }}
+                                className={styles.reportButton}
+                              >
+                                🚩 Anmäl
+                              </button>
+                              <button
+                                onClick={() => handleBlockUser(msg.user)}
+                                className={styles.blockButton}
+                              >
+                                🚫 Blockera
+                              </button>
+                            </>
+                          )}
+                        </div>
+
+                        {replyingTo === msg.id && (
+                          <div className={styles.replyBox}>
+                            <input
+                              type="text"
+                              placeholder={`Svara på ${msg.user}...`}
+                              value={replyText}
+                              onChange={(e) => setReplyText(e.target.value)}
+                              onKeyPress={(e) =>
+                                e.key === "Enter" && handleReply(msg.id)
+                              }
+                              className={styles.replyInput}
+                              autoFocus
+                            />
+                            <div className={styles.replyActions}>
+                              <button
+                                onClick={() => handleReply(msg.id)}
+                                className={styles.replySubmit}
+                              >
+                                Skicka
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setReplyingTo(null);
+                                  setReplyText("");
+                                }}
+                                className={styles.replyCancel}
+                              >
+                                Avbryt
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        {msg.replies && msg.replies.length > 0 && (
+                          <div className={styles.repliesList}>
+                            {msg.replies
+                              .filter((r) => !blockedUsers.includes(r.user))
+                              .map((reply) => (
+                                <div
+                                  key={reply.id}
+                                  className={styles.replyItem}
+                                >
+                                  <div className={styles.messageAvatar}>
+                                    {reply.avatar}
+                                  </div>
+                                  <div className={styles.messageContent}>
+                                    <div className={styles.messageHeader}>
+                                      <span className={styles.messageUser}>
+                                        {reply.user}
+                                      </span>
+                                      <span className={styles.messageTime}>
+                                        {reply.time}
+                                      </span>
+                                    </div>
+                                    <p className={styles.messageText}>
+                                      {reply.message}
+                                    </p>
+                                    <div className={styles.messageActions}>
+                                      <button className={styles.likeButton}>
+                                        ❤️ {reply.likes}
+                                      </button>
+                                      {(reply.user === username ||
+                                        reply.user === "Guest") && (
+                                        <button
+                                          onClick={() =>
+                                            handleDeleteReply(msg.id, reply.id)
+                                          }
+                                          className={styles.deleteButton}
+                                        >
+                                          🗑️ Radera
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        )}
                       </div>
-                      <p className={styles.messageText}>{msg.message}</p>
-                      <button className={styles.likeButton}>
-                        ❤️ {msg.likes}
-                      </button>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
 
               <div className={styles.inputArea}>
@@ -843,6 +1059,84 @@ export default function CommunityPage() {
                 className={styles.cancelButton}
               >
                 Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showReportModal && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setShowReportModal(false)}
+        >
+          <div
+            className={styles.reportModal}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className={styles.modalTitle}>Anmäl Meddelande</h3>
+            <p className={styles.modalSubtitle}>
+              Vänligen beskriv varför du anmäler detta meddelande
+            </p>
+            <div className={styles.reportOptions}>
+              <label className={styles.reportOption}>
+                <input
+                  type="radio"
+                  name="report"
+                  value="spam"
+                  checked={reportReason === "spam"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Spam eller missvisande</span>
+              </label>
+              <label className={styles.reportOption}>
+                <input
+                  type="radio"
+                  name="report"
+                  value="harassment"
+                  checked={reportReason === "harassment"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Trakasserier eller hatiskt innehåll</span>
+              </label>
+              <label className={styles.reportOption}>
+                <input
+                  type="radio"
+                  name="report"
+                  value="inappropriate"
+                  checked={reportReason === "inappropriate"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Olämpligt innehåll</span>
+              </label>
+              <label className={styles.reportOption}>
+                <input
+                  type="radio"
+                  name="report"
+                  value="other"
+                  checked={reportReason === "other"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Annat</span>
+              </label>
+            </div>
+            <div className={styles.modalButtons}>
+              <button
+                onClick={handleReportMessage}
+                className={styles.submitButton}
+                disabled={!reportReason}
+              >
+                Skicka Anmälan
+              </button>
+              <button
+                onClick={() => {
+                  setShowReportModal(false);
+                  setReportingMessageId(null);
+                  setReportReason("");
+                }}
+                className={styles.cancelButton}
+              >
+                Avbryt
               </button>
             </div>
           </div>

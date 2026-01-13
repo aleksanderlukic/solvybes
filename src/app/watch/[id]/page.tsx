@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useBlockedUsers } from "@/contexts/BlockedUsersContext";
 import styles from "./page.module.scss";
 
 type AudioMode = "original" | "music" | "radio" | "silent";
@@ -14,6 +15,8 @@ type Comment = {
   time: string;
   likes: number;
   liked: boolean;
+  replies?: Comment[];
+  isReported?: boolean;
 };
 
 export default function WatchPage() {
@@ -37,6 +40,8 @@ export default function WatchPage() {
       time: "2 hours ago",
       likes: 12,
       liked: false,
+      replies: [],
+      isReported: false,
     },
     {
       id: 2,
@@ -46,6 +51,8 @@ export default function WatchPage() {
       time: "5 hours ago",
       likes: 8,
       liked: false,
+      replies: [],
+      isReported: false,
     },
     {
       id: 3,
@@ -55,9 +62,19 @@ export default function WatchPage() {
       time: "1 day ago",
       likes: 15,
       liked: true,
+      replies: [],
+      isReported: false,
     },
   ]);
   const [newComment, setNewComment] = useState("");
+  const [replyingTo, setReplyingTo] = useState<number | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const { blockedUsers, blockUser, isBlocked } = useBlockedUsers();
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportingCommentId, setReportingCommentId] = useState<number | null>(
+    null
+  );
+  const [reportReason, setReportReason] = useState("");
 
   const handleLikeComment = (id: number) => {
     setComments(
@@ -84,10 +101,85 @@ export default function WatchPage() {
           time: "Just now",
           likes: 0,
           liked: false,
+          replies: [],
+          isReported: false,
         },
         ...comments,
       ]);
       setNewComment("");
+    }
+  };
+
+  const handleReply = (parentId: number) => {
+    if (replyText.trim()) {
+      setComments(
+        comments.map((comment) =>
+          comment.id === parentId
+            ? {
+                ...comment,
+                replies: [
+                  ...(comment.replies || []),
+                  {
+                    id: Date.now(),
+                    user: "You",
+                    avatar: "👤",
+                    message: replyText,
+                    time: "Just now",
+                    likes: 0,
+                    liked: false,
+                    isReported: false,
+                  },
+                ],
+              }
+            : comment
+        )
+      );
+      setReplyText("");
+      setReplyingTo(null);
+    }
+  };
+
+  const handleReportComment = () => {
+    if (reportingCommentId && reportReason) {
+      setComments(
+        comments.map((comment) =>
+          comment.id === reportingCommentId
+            ? { ...comment, isReported: true }
+            : comment
+        )
+      );
+      setShowReportModal(false);
+      setReportingCommentId(null);
+      setReportReason("");
+      alert("Kommentar anmäld. Tack för din feedback!");
+    }
+  };
+
+  const handleBlockUser = (userName: string) => {
+    if (confirm(`Är du säker på att du vill blockera ${userName}?`)) {
+      blockUser(userName);
+      alert(`${userName} har blockerats`);
+    }
+  };
+
+  const handleDeleteComment = (commentId: number) => {
+    if (confirm("Är du säker på att du vill radera denna kommentar?")) {
+      setComments(comments.filter((c) => c.id !== commentId));
+    }
+  };
+
+  const handleDeleteReply = (commentId: number, replyId: number) => {
+    if (confirm("Är du säker på att du vill radera detta svar?")) {
+      setComments(
+        comments.map((c) =>
+          c.id === commentId
+            ? {
+                ...c,
+                replies: c.replies?.filter((r) => r.id !== replyId),
+              }
+            : c
+        )
+      );
     }
   };
 
@@ -528,31 +620,220 @@ export default function WatchPage() {
         </div>
 
         <div className={styles.commentsList}>
-          {comments.map((comment) => (
-            <div key={comment.id} className={styles.commentItem}>
-              <div className={styles.commentAvatar}>{comment.avatar}</div>
-              <div className={styles.commentContent}>
-                <div className={styles.commentHeader}>
-                  <span className={styles.commentUser}>{comment.user}</span>
-                  <span className={styles.commentTime}>{comment.time}</span>
-                </div>
-                <p className={styles.commentMessage}>{comment.message}</p>
-                <div className={styles.commentActions}>
-                  <button
-                    onClick={() => handleLikeComment(comment.id)}
-                    className={`${styles.likeButton} ${
-                      comment.liked ? styles.liked : ""
-                    }`}
-                  >
-                    {comment.liked ? "❤️" : "🤍"} {comment.likes}
-                  </button>
-                  <button className={styles.replyButton}>Reply</button>
+          {comments
+            .filter((c) => !blockedUsers.includes(c.user))
+            .map((comment) => (
+              <div key={comment.id} className={styles.commentItem}>
+                <div className={styles.commentAvatar}>{comment.avatar}</div>
+                <div className={styles.commentContent}>
+                  <div className={styles.commentHeader}>
+                    <span className={styles.commentUser}>{comment.user}</span>
+                    <span className={styles.commentTime}>{comment.time}</span>
+                    {comment.isReported && (
+                      <span className={styles.reportedBadge}>🚩 Anmäld</span>
+                    )}
+                  </div>
+                  <p className={styles.commentMessage}>{comment.message}</p>
+                  <div className={styles.commentActions}>
+                    <button
+                      onClick={() => handleLikeComment(comment.id)}
+                      className={`${styles.likeButton} ${
+                        comment.liked ? styles.liked : ""
+                      }`}
+                    >
+                      {comment.liked ? "❤️" : "🤍"} {comment.likes}
+                    </button>
+                    <button
+                      onClick={() => setReplyingTo(comment.id)}
+                      className={styles.replyButton}
+                    >
+                      💬 Svara
+                    </button>
+                    {comment.user === "You" ? (
+                      <button
+                        onClick={() => handleDeleteComment(comment.id)}
+                        className={styles.deleteButton}
+                      >
+                        🗑️ Radera
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => {
+                            setReportingCommentId(comment.id);
+                            setShowReportModal(true);
+                          }}
+                          className={styles.reportButton}
+                        >
+                          🚩 Anmäl
+                        </button>
+                        <button
+                          onClick={() => handleBlockUser(comment.user)}
+                          className={styles.blockButton}
+                        >
+                          🚫 Blockera
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  {replyingTo === comment.id && (
+                    <div className={styles.replyBox}>
+                      <input
+                        type="text"
+                        placeholder={`Svara på ${comment.user}...`}
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        onKeyPress={(e) =>
+                          e.key === "Enter" && handleReply(comment.id)
+                        }
+                        className={styles.replyInput}
+                        autoFocus
+                      />
+                      <div className={styles.replyActions}>
+                        <button
+                          onClick={() => handleReply(comment.id)}
+                          className={styles.replySubmit}
+                        >
+                          Skicka
+                        </button>
+                        <button
+                          onClick={() => {
+                            setReplyingTo(null);
+                            setReplyText("");
+                          }}
+                          className={styles.replyCancel}
+                        >
+                          Avbryt
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {comment.replies && comment.replies.length > 0 && (
+                    <div className={styles.repliesList}>
+                      {comment.replies
+                        .filter((r) => !blockedUsers.includes(r.user))
+                        .map((reply) => (
+                          <div key={reply.id} className={styles.replyItem}>
+                            <div className={styles.commentAvatar}>
+                              {reply.avatar}
+                            </div>
+                            <div className={styles.commentContent}>
+                              <div className={styles.commentHeader}>
+                                <span className={styles.commentUser}>
+                                  {reply.user}
+                                </span>
+                                <span className={styles.commentTime}>
+                                  {reply.time}
+                                </span>
+                              </div>
+                              <p className={styles.commentMessage}>
+                                {reply.message}
+                              </p>
+                              <div className={styles.commentActions}>
+                                <button className={styles.likeButton}>
+                                  🤍 {reply.likes}
+                                </button>
+                                {reply.user === "You" && (
+                                  <button
+                                    onClick={() =>
+                                      handleDeleteReply(comment.id, reply.id)
+                                    }
+                                    className={styles.deleteButton}
+                                  >
+                                    🗑️ Radera
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
+
+      {showReportModal && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setShowReportModal(false)}
+        >
+          <div
+            className={styles.reportModal}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className={styles.modalTitle}>Anmäl Kommentar</h3>
+            <p className={styles.modalSubtitle}>
+              Vänligen beskriv varför du anmäler denna kommentar
+            </p>
+            <div className={styles.reportOptions}>
+              <label className={styles.reportOption}>
+                <input
+                  type="radio"
+                  name="report"
+                  value="spam"
+                  checked={reportReason === "spam"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Spam eller missvisande</span>
+              </label>
+              <label className={styles.reportOption}>
+                <input
+                  type="radio"
+                  name="report"
+                  value="harassment"
+                  checked={reportReason === "harassment"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Trakasserier eller hatiskt innehåll</span>
+              </label>
+              <label className={styles.reportOption}>
+                <input
+                  type="radio"
+                  name="report"
+                  value="inappropriate"
+                  checked={reportReason === "inappropriate"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Olämpligt innehåll</span>
+              </label>
+              <label className={styles.reportOption}>
+                <input
+                  type="radio"
+                  name="report"
+                  value="other"
+                  checked={reportReason === "other"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Annat</span>
+              </label>
+            </div>
+            <div className={styles.modalButtons}>
+              <button
+                onClick={handleReportComment}
+                className={styles.submitButton}
+                disabled={!reportReason}
+              >
+                Skicka Anmälan
+              </button>
+              <button
+                onClick={() => {
+                  setShowReportModal(false);
+                  setReportingCommentId(null);
+                  setReportReason("");
+                }}
+                className={styles.cancelButton}
+              >
+                Avbryt
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
