@@ -11,6 +11,15 @@ type CityWeather = {
   humidity: number;
 };
 
+type ForecastDay = {
+  date: string;
+  tempHigh: number;
+  tempLow: number;
+  description: string;
+  icon: string;
+  precipitation: number;
+};
+
 export default function CountdownPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [customDate, setCustomDate] = useState("");
@@ -20,6 +29,12 @@ export default function CountdownPage() {
   >([]);
   const [weatherData, setWeatherData] = useState<CityWeather[]>([]);
   const [isLoadingWeather, setIsLoadingWeather] = useState(true);
+  const [forecast, setForecast] = useState<ForecastDay[]>([]);
+  const [currentCity, setCurrentCity] = useState("Stockholm");
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lon: number;
+  } | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -29,6 +44,30 @@ export default function CountdownPage() {
   }, []);
 
   useEffect(() => {
+    // Get user's location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.log("Geolocation error:", error);
+          // Default to Stockholm if location is denied
+          setUserLocation({ lat: 59.3293, lon: 18.0686 });
+        }
+      );
+    } else {
+      // Default to Stockholm if geolocation not supported
+      setUserLocation({ lat: 59.3293, lon: 18.0686 });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!userLocation) return;
+
     const fetchWeather = async () => {
       try {
         const response = await fetch("/api/weather");
@@ -43,11 +82,32 @@ export default function CountdownPage() {
       }
     };
 
+    const fetchForecast = async () => {
+      try {
+        const response = await fetch(
+          `/api/forecast?lat=${userLocation.lat}&lon=${userLocation.lon}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setCurrentCity(data.city);
+          setForecast(data.forecasts);
+        }
+      } catch (error) {
+        console.error("Failed to fetch forecast:", error);
+      }
+    };
+
     fetchWeather();
+    fetchForecast();
+
     // Refresh weather every 10 minutes
-    const weatherInterval = setInterval(fetchWeather, 10 * 60 * 1000);
+    const weatherInterval = setInterval(() => {
+      fetchWeather();
+      fetchForecast();
+    }, 10 * 60 * 1000);
+
     return () => clearInterval(weatherInterval);
-  }, []);
+  }, [userLocation]);
 
   const summerStart = new Date("2026-06-21");
   const midsummer = new Date("2026-06-20"); // Midsommarafton
@@ -292,6 +352,31 @@ export default function CountdownPage() {
             })}
           </div>
         )}
+      </div>
+
+      <div className={styles.forecastSection}>
+        <h2 className={styles.sectionTitle}>📅 5-Dagars Prognos</h2>
+        <p className={styles.forecastDescription}>
+          Väderprognos för {currentCity} de kommande 5 dagarna
+        </p>
+        <div className={styles.forecastGrid}>
+          {forecast.map((day, index) => (
+            <div key={index} className={styles.forecastCard}>
+              <div className={styles.forecastDate}>{day.date}</div>
+              <div className={styles.forecastIcon}>{day.icon}</div>
+              <div className={styles.forecastTemps}>
+                <span className={styles.tempHigh}>{day.tempHigh}°</span>
+                <span className={styles.tempLow}>{day.tempLow}°</span>
+              </div>
+              <div className={styles.forecastDescription}>
+                {day.description}
+              </div>
+              <div className={styles.forecastPrecip}>
+                💧 {day.precipitation}%
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className={styles.customSection}>

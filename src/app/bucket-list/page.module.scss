@@ -1,0 +1,389 @@
+@import "../../styles/variables.scss";
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: $spacing-2xl $spacing-md;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-2xl;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+}
+
+.headerLeft {
+  flex: 1;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-sm;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: $color-text-secondary;
+}
+
+.addButton {
+  @include btn-primary;
+  padding: $spacing-md $spacing-xl;
+  white-space: nowrap;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: $spacing-md;
+  margin-bottom: $spacing-2xl;
+}
+
+.statCard {
+  @include card;
+  text-align: center;
+  padding: $spacing-lg;
+}
+
+.statValue {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $color-peach;
+  margin-bottom: $spacing-xs;
+}
+
+.statLabel {
+  color: $color-text-secondary;
+  font-size: 0.875rem;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.searchInput {
+  flex: 1;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  color: $color-white;
+  font-size: 1rem;
+
+  &:focus {
+    outline: none;
+    border-color: $color-peach;
+  }
+}
+
+.filterButtons {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.filterButton {
+  padding: $spacing-sm $spacing-lg;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-md;
+  color: $color-white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &.active {
+    background: rgba(255, 179, 153, 0.1);
+    border-color: $color-peach;
+    color: $color-peach;
+  }
+}
+
+.itemsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-md;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.itemCard {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  transition: all $transition-fast;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  &.visited {
+    opacity: 0.7;
+    border: 2px solid rgba(34, 197, 94, 0.3);
+    background: linear-gradient(
+      135deg,
+      rgba(34, 197, 94, 0.05) 0%,
+      rgba(34, 197, 94, 0.1) 100%
+    );
+  }
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.itemPriority {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.itemActions {
+  display: flex;
+  gap: $spacing-xs;
+}
+
+.visitedButton,
+.editButton,
+.deleteButton {
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-md;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.visitedButton {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $color-peach;
+}
+
+.itemDestination {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-white;
+}
+
+.itemCountry {
+  color: $color-text-secondary;
+  font-size: 1rem;
+}
+
+.itemNotes {
+  color: $color-text-tertiary;
+  line-height: 1.6;
+  font-size: 0.875rem;
+}
+
+.itemDate {
+  color: $color-text-secondary;
+  font-size: 0.875rem;
+  padding-top: $spacing-sm;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.visitedBadge {
+  position: absolute;
+  top: $spacing-md;
+  right: $spacing-md;
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.5);
+  color: #22c55e;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-full;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.emptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: $spacing-3xl $spacing-md;
+}
+
+.emptyIcon {
+  font-size: 4rem;
+  margin-bottom: $spacing-md;
+}
+
+.emptyText {
+  font-size: 1.125rem;
+  color: $color-text-secondary;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-md;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal {
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: scaleIn 0.3s ease-in-out;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-xl;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-white;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: $color-text-tertiary;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: $spacing-sm;
+  transition: all $transition-fast;
+
+  &:hover {
+    color: $color-white;
+  }
+}
+
+.modalBody {
+  padding: $spacing-xl;
+}
+
+.formGroup {
+  margin-bottom: $spacing-lg;
+
+  label {
+    display: block;
+    color: $color-white;
+    font-weight: 600;
+    margin-bottom: $spacing-sm;
+  }
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  color: $color-white;
+  font-size: 1rem;
+  transition: all $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-peach;
+  }
+}
+
+.textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.rangeInput {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: $radius-full;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: $color-peach;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  &::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: $color-peach;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+}
+
+.rangeLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: $spacing-xs;
+  font-size: 0.75rem;
+  color: $color-text-tertiary;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-md;
+  padding: $spacing-xl;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cancelButton {
+  @include btn-secondary;
+  padding: $spacing-md $spacing-xl;
+}
+
+.saveButton {
+  @include btn-primary;
+  padding: $spacing-md $spacing-xl;
+}

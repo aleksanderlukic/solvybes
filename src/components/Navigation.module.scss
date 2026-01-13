@@ -29,11 +29,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 4rem;
+  height: 3.5rem;
+  gap: $spacing-sm;
 }
 
 .logo {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   background: linear-gradient(
     to right,
@@ -43,28 +44,49 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  flex-shrink: 0;
 }
 
 .links {
-  display: flex;
-  gap: $spacing-xs;
+  display: none;
+  gap: $spacing-sm;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 
-  @media (min-width: 768px) {
-    gap: $spacing-sm;
+  @media (min-width: 1024px) {
+    display: flex;
   }
 }
 
+.linkWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-shrink: 0;
+}
+
 .link {
-  padding: $spacing-sm $spacing-md;
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-xs $spacing-md;
   border-radius: $radius-full;
   font-size: 0.875rem;
   font-weight: 500;
   transition: all $transition-fast;
   color: rgba(255, 255, 255, 0.8);
-
-  @media (min-width: 768px) {
-    font-size: 1rem;
-  }
+  white-space: nowrap;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1.5;
 
   &:hover {
     color: $color-white;
@@ -74,5 +96,41 @@
   &.active {
     background: rgba(255, 255, 255, 0.2);
     color: $color-white;
+  }
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: $spacing-xs;
+  background: rgba(26, 26, 46, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: $radius-lg;
+  padding: $spacing-xs;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  animation: fadeIn 0.15s ease-in-out;
+}
+
+.dropdownItem {
+  display: block;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-md;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  transition: all $transition-fast;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: $color-white;
+  }
+
+  &.active {
+    background: rgba(255, 179, 153, 0.15);
+    color: $color-peach;
   }
 }

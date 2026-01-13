@@ -5,6 +5,24 @@ import styles from "./page.module.scss";
 
 type ContentType = "quote" | "tips" | null;
 
+type MoodEntry = {
+  id: number;
+  emoji: string;
+  date: string;
+  note: string;
+};
+
+const MOOD_EMOJIS = [
+  { emoji: "😊", label: "Glad" },
+  { emoji: "😌", label: "Lugn" },
+  { emoji: "😐", label: "Okej" },
+  { emoji: "😔", label: "Nere" },
+  { emoji: "😢", label: "Ledsen" },
+  { emoji: "😤", label: "Frustrerad" },
+  { emoji: "🤗", label: "Tacksam" },
+  { emoji: "😴", label: "Trött" },
+];
+
 export default function MoodPage() {
   const [contentType, setContentType] = useState<ContentType>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -12,6 +30,52 @@ export default function MoodPage() {
   const [currentTips, setCurrentTips] = useState<string[]>([]);
   const [displayedText, setDisplayedText] = useState("");
   const [showContent, setShowContent] = useState(false);
+  const [moodHistory, setMoodHistory] = useState<MoodEntry[]>([]);
+  const [selectedMood, setSelectedMood] = useState("");
+  const [moodNote, setMoodNote] = useState("");
+  const [showTracker, setShowTracker] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("moodHistory");
+    if (saved) {
+      setMoodHistory(JSON.parse(saved));
+    }
+  }, []);
+
+  const saveMoodEntry = () => {
+    if (!selectedMood) return;
+
+    const newEntry: MoodEntry = {
+      id: Date.now(),
+      emoji: selectedMood,
+      date: new Date().toISOString(),
+      note: moodNote,
+    };
+
+    const updated = [newEntry, ...moodHistory].slice(0, 30);
+    setMoodHistory(updated);
+    localStorage.setItem("moodHistory", JSON.stringify(updated));
+    setSelectedMood("");
+    setMoodNote("");
+  };
+
+  const getMoodInsight = () => {
+    if (moodHistory.length < 3)
+      return "Fortsätt logga din känsla för att se trender!";
+
+    const recent = moodHistory.slice(0, 7);
+    const positive = recent.filter((m) =>
+      ["😊", "😌", "🤗"].includes(m.emoji)
+    ).length;
+    const negative = recent.filter((m) =>
+      ["😔", "😢", "😤"].includes(m.emoji)
+    ).length;
+
+    if (positive > negative * 2) return "Du har haft en positiv vecka! ✨";
+    if (negative > positive * 2)
+      return "Det verkar tufft just nu. Ta hand om dig! 💙";
+    return "Din känsla är blandad. Det är helt okej! 🌈";
+  };
 
   const quotes = [
     "The sun will shine again, and with it comes new possibilities.",
@@ -105,74 +169,182 @@ export default function MoodPage() {
         </p>
       </div>
 
-      <div className={styles.actionGrid}>
-        <button onClick={generateQuote} className={styles.actionCard}>
-          <div className={styles.actionIcon}>💬</div>
-          <h2 className={styles.actionTitle}>Generate Quote</h2>
-          <p className={styles.actionDescription}>
-            Get an inspiring quote to lift your spirits
-          </p>
-        </button>
-
-        <button onClick={generateTips} className={styles.actionCard}>
-          <div className={styles.actionIcon}>💡</div>
-          <h2 className={styles.actionTitle}>Get 3 Tips</h2>
-          <p className={styles.actionDescription}>
-            Receive actionable tips to improve your mood
-          </p>
+      <div className={styles.trackerToggle}>
+        <button
+          onClick={() => setShowTracker(!showTracker)}
+          className={styles.toggleButton}
+        >
+          {showTracker ? "🤖 Visa AI Booster" : "📊 Visa Känslotracker"}
         </button>
       </div>
 
-      {isGenerating && (
-        <div className={styles.loadingCard}>
-          <div className={styles.aiIcon}>🤖</div>
-          <div className={styles.loadingDots}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <p className={styles.loadingText}>
-            {contentType === "quote"
-              ? "AI is crafting your quote..."
-              : "AI is generating your tips..."}
-          </p>
-        </div>
-      )}
+      {showTracker ? (
+        <div className={styles.trackerSection}>
+          <h2 className={styles.trackerTitle}>Hur mår du idag?</h2>
 
-      {contentType === "quote" && showContent && !isGenerating && (
-        <div className={styles.resultCard}>
-          <div className={styles.resultHeader}>
-            <span className={styles.aiLabel}>✨ AI Generated</span>
-            <h3 className={styles.resultTitle}>Your Personalized Quote</h3>
-          </div>
-          <p className={styles.quote}>
-            &ldquo;{displayedText}
-            <span className={styles.cursor}>|</span>&rdquo;
-          </p>
-          <button onClick={generateQuote} className={styles.regenerateButton}>
-            🔄 Generate New Quote
-          </button>
-        </div>
-      )}
-
-      {contentType === "tips" && showContent && !isGenerating && (
-        <div className={styles.resultCard}>
-          <div className={styles.resultHeader}>
-            <span className={styles.aiLabel}>✨ AI Generated</span>
-            <h3 className={styles.resultTitle}>Your Personalized Tips</h3>
-          </div>
-          <ul className={styles.tipsList}>
-            {currentTips.map((tip, index) => (
-              <li key={index} style={{ animationDelay: `${index * 0.2}s` }}>
-                <span className={styles.tipNumber}>{index + 1}</span>
-                {tip}
-              </li>
+          <div className={styles.moodSelector}>
+            {MOOD_EMOJIS.map((mood) => (
+              <button
+                key={mood.emoji}
+                onClick={() => setSelectedMood(mood.emoji)}
+                className={`${styles.moodButton} ${
+                  selectedMood === mood.emoji ? styles.selected : ""
+                }`}
+              >
+                <span className={styles.moodEmoji}>{mood.emoji}</span>
+                <span className={styles.moodLabel}>{mood.label}</span>
+              </button>
             ))}
-          </ul>
-          <button onClick={generateTips} className={styles.regenerateButton}>
-            🔄 Generate New Tips
-          </button>
+          </div>
+
+          {selectedMood && (
+            <div className={styles.noteSection}>
+              <textarea
+                value={moodNote}
+                onChange={(e) => setMoodNote(e.target.value)}
+                placeholder="Vill du skriva en anteckning? (valfritt)"
+                className={styles.noteInput}
+                rows={3}
+              />
+              <button onClick={saveMoodEntry} className={styles.saveButton}>
+                💾 Spara Känsla
+              </button>
+            </div>
+          )}
+
+          {moodHistory.length > 0 && (
+            <>
+              <div className={styles.insightCard}>
+                <div className={styles.insightIcon}>🔮</div>
+                <p className={styles.insightText}>{getMoodInsight()}</p>
+              </div>
+
+              <div className={styles.historySection}>
+                <h3 className={styles.historyTitle}>
+                  Historik (senaste 7 dagar)
+                </h3>
+                <div className={styles.historyChart}>
+                  {moodHistory
+                    .slice(0, 7)
+                    .reverse()
+                    .map((entry) => (
+                      <div key={entry.id} className={styles.chartBar}>
+                        <span className={styles.chartEmoji}>{entry.emoji}</span>
+                        <span className={styles.chartDate}>
+                          {new Date(entry.date).toLocaleDateString("sv-SE", {
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+
+                <div className={styles.historyList}>
+                  {moodHistory.slice(0, 5).map((entry) => (
+                    <div key={entry.id} className={styles.historyItem}>
+                      <span className={styles.historyEmoji}>{entry.emoji}</span>
+                      <div className={styles.historyInfo}>
+                        <span className={styles.historyDate}>
+                          {new Date(entry.date).toLocaleDateString("sv-SE", {
+                            weekday: "short",
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                        {entry.note && (
+                          <span className={styles.historyNote}>
+                            {entry.note}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
+      ) : (
+        <>
+          <div className={styles.actionGrid}>
+            <button onClick={generateQuote} className={styles.actionCard}>
+              <div className={styles.actionIcon}>💬</div>
+              <h2 className={styles.actionTitle}>Generate Quote</h2>
+              <p className={styles.actionDescription}>
+                Get an inspiring quote to lift your spirits
+              </p>
+            </button>
+
+            <button onClick={generateTips} className={styles.actionCard}>
+              <div className={styles.actionIcon}>💡</div>
+              <h2 className={styles.actionTitle}>Get 3 Tips</h2>
+              <p className={styles.actionDescription}>
+                Receive actionable tips to improve your mood
+              </p>
+            </button>
+          </div>
+
+          {isGenerating && (
+            <div className={styles.loadingCard}>
+              <div className={styles.aiIcon}>🤖</div>
+              <div className={styles.loadingDots}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <p className={styles.loadingText}>
+                {contentType === "quote"
+                  ? "AI is crafting your quote..."
+                  : "AI is generating your tips..."}
+              </p>
+            </div>
+          )}
+
+          {contentType === "quote" && showContent && !isGenerating && (
+            <div className={styles.resultCard}>
+              <div className={styles.resultHeader}>
+                <span className={styles.aiLabel}>✨ AI Generated</span>
+                <h3 className={styles.resultTitle}>Your Personalized Quote</h3>
+              </div>
+              <p className={styles.quote}>
+                &ldquo;{displayedText}
+                <span className={styles.cursor}>|</span>&rdquo;
+              </p>
+              <button
+                onClick={generateQuote}
+                className={styles.regenerateButton}
+              >
+                🔄 Generate New Quote
+              </button>
+            </div>
+          )}
+
+          {contentType === "tips" && showContent && !isGenerating && (
+            <div className={styles.resultCard}>
+              <div className={styles.resultHeader}>
+                <span className={styles.aiLabel}>✨ AI Generated</span>
+                <h3 className={styles.resultTitle}>Your Personalized Tips</h3>
+              </div>
+              <ul className={styles.tipsList}>
+                {currentTips.map((tip, index) => (
+                  <li key={index} style={{ animationDelay: `${index * 0.2}s` }}>
+                    <span className={styles.tipNumber}>{index + 1}</span>
+                    {tip}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={generateTips}
+                className={styles.regenerateButton}
+              >
+                🔄 Generate New Tips
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

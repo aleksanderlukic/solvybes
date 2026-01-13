@@ -82,6 +82,83 @@
   color: $color-text-tertiary;
 }
 
+.forecastSection {
+  margin-top: $spacing-3xl;
+  margin-bottom: $spacing-3xl;
+
+  .sectionTitle {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: $color-white;
+    margin-bottom: $spacing-md;
+    text-align: center;
+  }
+}
+
+.forecastDescription {
+  text-align: center;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-2xl;
+}
+
+.forecastGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: $spacing-md;
+}
+
+.forecastCard {
+  @include card;
+  text-align: center;
+  padding: $spacing-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  transition: all $transition-fast;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.forecastDate {
+  font-size: 0.875rem;
+  color: $color-text-secondary;
+  font-weight: 600;
+}
+
+.forecastIcon {
+  font-size: 2.5rem;
+  margin: $spacing-sm 0;
+}
+
+.forecastTemps {
+  display: flex;
+  justify-content: center;
+  gap: $spacing-md;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.tempHigh {
+  color: $color-peach;
+}
+
+.tempLow {
+  color: $color-text-tertiary;
+}
+
+.forecastDescription {
+  font-size: 0.875rem;
+  color: $color-white;
+}
+
+.forecastPrecip {
+  font-size: 0.75rem;
+  color: $color-text-tertiary;
+  margin-top: $spacing-xs;
+}
+
 .milestonesSection {
   .sectionTitle {
     font-size: 1.875rem;

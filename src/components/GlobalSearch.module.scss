@@ -1,0 +1,153 @@
+@import "../styles/variables.scss";
+
+.globalSearch {
+  position: relative;
+}
+
+.searchButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-full;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+  }
+}
+
+.searchModal {
+  position: fixed;
+  top: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 40rem;
+  background: rgba(30, 30, 40, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-xl;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  animation: scaleIn 0.2s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-lg $spacing-xl;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.searchIcon {
+  font-size: 1.5rem;
+  opacity: 0.6;
+}
+
+.searchInput {
+  flex: 1;
+  background: none;
+  border: none;
+  color: $color-white;
+  font-size: 1.125rem;
+  outline: none;
+
+  &::placeholder {
+    color: $color-text-tertiary;
+  }
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: $color-text-tertiary;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: $spacing-xs;
+  border-radius: $radius-md;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: $color-white;
+  }
+}
+
+.results {
+  max-height: 24rem;
+  overflow-y: auto;
+}
+
+.resultItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-xl;
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all $transition-fast;
+  text-align: left;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.resultIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.resultContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.resultTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: $color-white;
+  margin-bottom: $spacing-xs;
+}
+
+.resultSubtitle {
+  font-size: 0.875rem;
+  color: $color-text-tertiary;
+}
+
+.resultType {
+  @include chip;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+  background: rgba(253, 172, 116, 0.2);
+  color: $color-peach;
+  padding: 0.25rem 0.75rem;
+}
+
+.noResults {
+  padding: $spacing-3xl;
+  text-align: center;
+  color: $color-text-tertiary;
+}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import Navigation from "@/components/Navigation";
+import { FavoritesProvider } from "@/contexts/FavoritesContext";
 
 export const metadata: Metadata = {
   title: "Solvybes - Fly vintern. Känn solen.",
@@ -17,11 +18,13 @@ export default function RootLayout({
   return (
     <html lang="sv">
       <body>
-        <AnimatedBackground />
-        <Navigation />
-        <main style={{ paddingTop: "4rem", minHeight: "100vh" }}>
-          {children}
-        </main>
+        <FavoritesProvider>
+          <AnimatedBackground />
+          <Navigation />
+          <main style={{ paddingTop: "4rem", minHeight: "100vh" }}>
+            {children}
+          </main>
+        </FavoritesProvider>
       </body>
     </html>
   );

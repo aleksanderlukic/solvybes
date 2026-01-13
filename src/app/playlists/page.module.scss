@@ -1,0 +1,291 @@
+@import "../../styles/variables.scss";
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: $spacing-2xl $spacing-md;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-3xl;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $color-white;
+}
+
+.createButton {
+  @include btn-primary;
+  padding: $spacing-md $spacing-xl;
+}
+
+.playlistsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-md;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.playlistCard {
+  @include card;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  transition: all $transition-normal;
+  display: block;
+  text-decoration: none;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(253, 172, 116, 0.4);
+  }
+}
+
+.deleteButton {
+  position: absolute;
+  top: $spacing-sm;
+  right: $spacing-sm;
+  background: rgba(239, 68, 68, 0.3);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: white;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all $transition-fast;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.6);
+  }
+}
+
+.playlistIcon {
+  font-size: 4rem;
+  margin-bottom: $spacing-md;
+}
+
+.playlistName {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-sm;
+}
+
+.playlistDescription {
+  color: $color-text-secondary;
+  margin-bottom: $spacing-md;
+}
+
+.playlistMeta {
+  font-size: 0.875rem;
+  color: $color-text-tertiary;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: $spacing-md;
+}
+
+.modalContent {
+  background: rgba(30, 30, 40, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-xl;
+  width: 100%;
+  max-width: 40rem;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: scaleIn 0.2s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-xl;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-white;
+  margin: 0;
+}
+
+.modalClose {
+  background: none;
+  border: none;
+  color: $color-text-tertiary;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: $spacing-xs;
+  border-radius: $radius-md;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: $color-white;
+  }
+}
+
+.modalBody {
+  padding: $spacing-xl;
+  overflow-y: auto;
+}
+
+.formGroup {
+  margin-bottom: $spacing-xl;
+
+  label {
+    display: block;
+    color: $color-white;
+    font-weight: 600;
+    margin-bottom: $spacing-sm;
+  }
+}
+
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: $spacing-xs;
+}
+
+.iconButton {
+  aspect-ratio: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-md;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &.selected {
+    background: rgba(253, 172, 116, 0.2);
+    border-color: $color-peach;
+  }
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  color: $color-white;
+  font-size: 1rem;
+  transition: all $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-peach;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &::placeholder {
+    color: $color-text-tertiary;
+  }
+}
+
+.textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.videoList {
+  max-height: 15rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.videoItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  input[type="checkbox"] {
+    cursor: pointer;
+  }
+
+  span {
+    color: $color-white;
+  }
+}
+
+.videoCountry {
+  margin-left: auto;
+  font-size: 0.875rem;
+  color: $color-text-tertiary !important;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-md;
+  padding: $spacing-xl;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cancelButton {
+  @include btn-secondary;
+  padding: $spacing-md $spacing-xl;
+}
+
+.saveButton {
+  @include btn-primary;
+  padding: $spacing-md $spacing-xl;
+}

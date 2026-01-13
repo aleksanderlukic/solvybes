@@ -197,3 +197,132 @@
     }
   }
 }
+
+.commentsSection {
+  margin-top: $spacing-3xl;
+}
+
+.commentsTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-xl;
+}
+
+.addComment {
+  display: flex;
+  gap: $spacing-md;
+  margin-bottom: $spacing-2xl;
+}
+
+.commentAvatar {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.commentInput {
+  flex: 1;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  color: $color-white;
+  font-size: 1rem;
+  transition: all $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-peach;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &::placeholder {
+    color: $color-text-tertiary;
+  }
+}
+
+.commentButton {
+  @include btn-primary;
+  padding: $spacing-md $spacing-xl;
+}
+
+.commentsList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+}
+
+.commentItem {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.commentContent {
+  flex: 1;
+}
+
+.commentHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xs;
+}
+
+.commentUser {
+  font-weight: 600;
+  color: $color-white;
+}
+
+.commentTime {
+  font-size: 0.875rem;
+  color: $color-text-tertiary;
+}
+
+.commentMessage {
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+  line-height: 1.6;
+}
+
+.commentActions {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.likeButton {
+  background: none;
+  border: none;
+  color: $color-text-tertiary;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-md;
+  transition: all $transition-fast;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &.liked {
+    color: $color-sunset;
+  }
+}
+
+.replyButton {
+  background: none;
+  border: none;
+  color: $color-text-tertiary;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-md;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: $color-white;
+  }
+}

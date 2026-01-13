@@ -1,9 +1,20 @@
 @import "../styles/variables.scss";
 
+.cardLink {
+  display: block;
+  text-decoration: none;
+}
+
 .card {
   @include card;
   cursor: pointer;
   height: 100%;
+  transition: all $transition-normal;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(253, 172, 116, 0.3);
+  }
 }
 
 .thumbnail {
@@ -20,6 +31,7 @@
   align-items: center;
   justify-content: center;
   transition: all $transition-normal;
+  position: relative;
 
   svg {
     width: 4rem;
@@ -27,6 +39,13 @@
     color: rgba(255, 255, 255, 0.5);
     transition: color $transition-fast;
   }
+}
+
+.favoriteBtn {
+  position: absolute;
+  top: $spacing-sm;
+  right: $spacing-sm;
+  z-index: 10;
 }
 
 .card:hover .thumbnail svg {

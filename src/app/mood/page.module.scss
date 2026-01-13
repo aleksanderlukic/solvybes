@@ -40,6 +40,202 @@
   color: $color-text-secondary;
 }
 
+.trackerToggle {
+  text-align: center;
+  margin-bottom: $spacing-2xl;
+}
+
+.toggleButton {
+  @include btn-secondary;
+  padding: $spacing-md $spacing-xl;
+  font-size: 1rem;
+}
+
+.trackerSection {
+  @include card;
+  margin-bottom: $spacing-2xl;
+}
+
+.trackerTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: $color-white;
+  text-align: center;
+  margin-bottom: $spacing-2xl;
+}
+
+.moodSelector {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+  margin-bottom: $spacing-2xl;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.moodButton {
+  @include card;
+  padding: $spacing-xl;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all $transition-fast;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &.selected {
+    border-color: $color-peach;
+    background: rgba(255, 179, 153, 0.1);
+  }
+}
+
+.moodEmoji {
+  font-size: 2.5rem;
+}
+
+.moodLabel {
+  color: $color-text-secondary;
+  font-size: 0.875rem;
+}
+
+.noteSection {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin-bottom: $spacing-2xl;
+}
+
+.noteInput {
+  width: 100%;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-lg;
+  color: $color-white;
+  font-size: 1rem;
+  resize: vertical;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: $color-peach;
+  }
+}
+
+.saveButton {
+  @include btn-primary;
+  align-self: center;
+  padding: $spacing-md $spacing-2xl;
+}
+
+.insightCard {
+  @include card;
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-2xl;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 179, 153, 0.1) 0%,
+    rgba(255, 140, 107, 0.1) 100%
+  );
+  border: 2px solid rgba(255, 179, 153, 0.2);
+}
+
+.insightIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.insightText {
+  font-size: 1.125rem;
+  color: $color-white;
+  font-weight: 600;
+}
+
+.historySection {
+  margin-top: $spacing-2xl;
+}
+
+.historyTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-white;
+  margin-bottom: $spacing-lg;
+}
+
+.historyChart {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-2xl;
+}
+
+.chartBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.chartEmoji {
+  font-size: 2rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.chartDate {
+  font-size: 0.75rem;
+  color: $color-text-tertiary;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.historyItem {
+  @include card;
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  padding: $spacing-lg;
+}
+
+.historyEmoji {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.historyInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  flex: 1;
+}
+
+.historyDate {
+  color: $color-text-secondary;
+  font-size: 0.875rem;
+}
+
+.historyNote {
+  color: $color-white;
+  font-size: 1rem;
+}
+
 .actionGrid {
   display: grid;
   grid-template-columns: 1fr;
