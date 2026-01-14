@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import VideoCard from "@/components/VideoCard";
 import styles from "./page.module.scss";
 
@@ -14,14 +15,14 @@ export default function ExplorePage() {
   >(null);
 
   const countries = [
-    { name: "Spain", flag: "🇪🇸", count: 12 },
-    { name: "Greece", flag: "🇬🇷", count: 8 },
-    { name: "Italy", flag: "🇮🇹", count: 15 },
-    { name: "Portugal", flag: "🇵🇹", count: 6 },
-    { name: "France", flag: "🇫🇷", count: 10 },
-    { name: "Croatia", flag: "🇭🇷", count: 7 },
-    { name: "Thailand", flag: "🇹🇭", count: 9 },
-    { name: "Bali", flag: "🇮🇩", count: 5 },
+    { name: "Spain", flag: "🇪🇸", code: "es", count: 12 },
+    { name: "Greece", flag: "🇬🇷", code: "gr", count: 8 },
+    { name: "Italy", flag: "🇮🇹", code: "it", count: 15 },
+    { name: "Portugal", flag: "🇵🇹", code: "pt", count: 6 },
+    { name: "France", flag: "🇫🇷", code: "fr", count: 10 },
+    { name: "Croatia", flag: "🇭🇷", code: "hr", count: 7 },
+    { name: "Thailand", flag: "🇹🇭", code: "th", count: 9 },
+    { name: "Bali", flag: "🇮🇩", code: "id", count: 5 },
   ];
 
   const videos = [
@@ -110,9 +111,18 @@ export default function ExplorePage() {
                 selectedCountry === country.name ? styles.selected : ""
               }`}
             >
-              <div className={styles.flag}>{country.flag}</div>
-              <h3 className={styles.countryName}>{country.name}</h3>
-              <p className={styles.countryCount}>{country.count} videos</p>
+              <Image
+                src={`https://flagcdn.com/w320/${country.code}.png`}
+                alt={`${country.name} flag`}
+                width={320}
+                height={213}
+                className={styles.flagImage}
+                unoptimized
+              />
+              <div className={styles.countryInfo}>
+                <h3 className={styles.countryName}>{country.name}</h3>
+                <p className={styles.countryCount}>{country.count} videos</p>
+              </div>
             </button>
           ))}
         </div>

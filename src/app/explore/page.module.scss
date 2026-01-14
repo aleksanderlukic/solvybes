@@ -61,8 +61,8 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: $spacing-xl;
-  background: rgba(20, 20, 30, 0.5);
+  padding: 0;
+  background: rgba(20, 20, 30, 0.8);
 
   &::before {
     content: "";
@@ -73,8 +73,8 @@
     bottom: 0;
     background: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.1),
-      rgba(0, 0, 0, 0.5)
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.6)
     );
     z-index: 1;
     transition: all $transition-fast;
@@ -83,8 +83,8 @@
   &:hover::before {
     background: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.05),
-      rgba(0, 0, 0, 0.4)
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.5)
     );
   }
 
@@ -106,18 +106,156 @@
   }
 }
 
+.flagImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.countryInfo {
+  position: relative;
+  z-index: 2;
+  padding: $spacing-xl;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9),
+    rgba(0, 0, 0, 0.7),
+    transparent
+  );
+}
+
+// Spain - Red and Yellow horizontal stripes
+.countrySpain {
+  background: linear-gradient(
+    to bottom,
+    #c60b1e 0%,
+    #c60b1e 25%,
+    #ffc400 25%,
+    #ffc400 75%,
+    #c60b1e 75%,
+    #c60b1e 100%
+  ) !important;
+}
+
+// Greece - Blue and white horizontal stripes
+.countryGreece {
+  background: linear-gradient(
+    to bottom,
+    #0d5eaf 0%,
+    #0d5eaf 11%,
+    #ffffff 11%,
+    #ffffff 22%,
+    #0d5eaf 22%,
+    #0d5eaf 33%,
+    #ffffff 33%,
+    #ffffff 44%,
+    #0d5eaf 44%,
+    #0d5eaf 56%,
+    #ffffff 56%,
+    #ffffff 67%,
+    #0d5eaf 67%,
+    #0d5eaf 78%,
+    #ffffff 78%,
+    #ffffff 89%,
+    #0d5eaf 89%,
+    #0d5eaf 100%
+  ) !important;
+}
+
+// Italy - Green, white, red vertical stripes
+.countryItaly {
+  background: linear-gradient(
+    to right,
+    #009246 0%,
+    #009246 33%,
+    #f1f2f1 33%,
+    #f1f2f1 67%,
+    #ce2b37 67%,
+    #ce2b37 100%
+  ) !important;
+}
+
+// Portugal - Green and red vertical with coat of arms area
+.countryPortugal {
+  background: linear-gradient(
+    to right,
+    #006600 0%,
+    #006600 40%,
+    #ff0000 40%,
+    #ff0000 100%
+  ) !important;
+}
+
+// France - Blue, white, red vertical stripes
+.countryFrance {
+  background: linear-gradient(
+    to right,
+    #002395 0%,
+    #002395 33%,
+    #ffffff 33%,
+    #ffffff 67%,
+    #ed2939 67%,
+    #ed2939 100%
+  ) !important;
+}
+
+// Croatia - Red, white, blue horizontal stripes
+.countryCroatia {
+  background: linear-gradient(
+    to bottom,
+    #ff0000 0%,
+    #ff0000 33%,
+    #ffffff 33%,
+    #ffffff 67%,
+    #171796 67%,
+    #171796 100%
+  ) !important;
+}
+
+// Thailand - Red, white, blue horizontal stripes
+.countryThailand {
+  background: linear-gradient(
+    to bottom,
+    #a51931 0%,
+    #a51931 16.67%,
+    #f4f5f8 16.67%,
+    #f4f5f8 33.33%,
+    #2d2a4a 33.33%,
+    #2d2a4a 66.67%,
+    #f4f5f8 66.67%,
+    #f4f5f8 83.33%,
+    #a51931 83.33%,
+    #a51931 100%
+  ) !important;
+}
+
+// Bali (Indonesia) - Red and white horizontal stripes
+.countryBali {
+  background: linear-gradient(
+    to bottom,
+    #ff0000 0%,
+    #ff0000 50%,
+    #ffffff 50%,
+    #ffffff 100%
+  ) !important;
+}
+
 .flag {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 20rem;
+  font-size: 5rem;
   line-height: 1;
   z-index: 0;
-  opacity: 0.8;
+  opacity: 0.15;
 
   @media (min-width: 768px) {
-    font-size: 25rem;
+    font-size: 6rem;
   }
 }
 
@@ -126,17 +264,13 @@
   font-weight: 700;
   color: $color-white;
   margin-bottom: 0.25rem;
-  position: relative;
-  z-index: 2;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .countryCount {
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.875rem;
-  position: relative;
-  z-index: 2;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .filters {
