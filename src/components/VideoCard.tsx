@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import FavoriteButton from "./FavoriteButton";
 import styles from "./VideoCard.module.scss";
 
@@ -10,6 +11,7 @@ interface VideoCardProps {
   country: string;
   type: "Beach" | "City";
   timeOfDay: "Day" | "Night";
+  thumbnail?: string;
 }
 
 export default function VideoCard({
@@ -18,14 +20,25 @@ export default function VideoCard({
   country,
   type,
   timeOfDay,
+  thumbnail,
 }: VideoCardProps) {
   return (
     <Link href={`/watch/${id}`} className={styles.cardLink}>
       <div className={styles.card}>
         <div className={styles.thumbnail}>
-          <svg fill="currentColor" viewBox="0 0 24 24">
-            <path d="M8 5v14l11-7z" />
-          </svg>
+          {thumbnail ? (
+            <Image
+              src={thumbnail}
+              alt={title}
+              fill
+              className={styles.thumbnailImage}
+              unoptimized
+            />
+          ) : (
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          )}
           <FavoriteButton videoId={id} className={styles.favoriteBtn} />
         </div>
         <h3 className={styles.title}>{title}</h3>

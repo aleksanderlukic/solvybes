@@ -41,6 +41,15 @@
   }
 }
 
+.thumbnailImage {
+  object-fit: cover;
+  transition: transform $transition-normal;
+}
+
+.card:hover .thumbnailImage {
+  transform: scale(1.05);
+}
+
 .favoriteBtn {
   position: absolute;
   top: $spacing-sm;

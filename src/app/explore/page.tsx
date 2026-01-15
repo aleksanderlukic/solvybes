@@ -32,6 +32,8 @@ export default function ExplorePage() {
       country: "Spain",
       type: "Beach" as const,
       timeOfDay: "Day" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800",
     },
     {
       id: "2",
@@ -39,6 +41,8 @@ export default function ExplorePage() {
       country: "Greece",
       type: "Beach" as const,
       timeOfDay: "Day" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800",
     },
     {
       id: "3",
@@ -46,6 +50,8 @@ export default function ExplorePage() {
       country: "Spain",
       type: "City" as const,
       timeOfDay: "Day" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1583422409516-2895a77efded?w=800",
     },
     {
       id: "4",
@@ -53,6 +59,8 @@ export default function ExplorePage() {
       country: "Greece",
       type: "City" as const,
       timeOfDay: "Night" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1555993539-1732b0258235?w=800",
     },
     {
       id: "5",
@@ -60,6 +68,8 @@ export default function ExplorePage() {
       country: "Italy",
       type: "City" as const,
       timeOfDay: "Day" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800",
     },
     {
       id: "6",
@@ -67,6 +77,8 @@ export default function ExplorePage() {
       country: "Italy",
       type: "Beach" as const,
       timeOfDay: "Day" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1534073737927-85f2e392a2c8?w=800",
     },
     {
       id: "7",
@@ -74,6 +86,8 @@ export default function ExplorePage() {
       country: "Portugal",
       type: "City" as const,
       timeOfDay: "Day" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=800",
     },
     {
       id: "8",
@@ -81,6 +95,71 @@ export default function ExplorePage() {
       country: "Portugal",
       type: "Beach" as const,
       timeOfDay: "Day" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1550690139-6b4f3f53a874?w=800",
+    },
+    {
+      id: "9",
+      title: "Nice Promenade",
+      country: "France",
+      type: "Beach" as const,
+      timeOfDay: "Day" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1545969089-37da5a4e2f8f?w=800",
+    },
+    {
+      id: "10",
+      title: "Paris Evening Walk",
+      country: "France",
+      type: "City" as const,
+      timeOfDay: "Night" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800",
+    },
+    {
+      id: "11",
+      title: "Dubrovnik Old Town",
+      country: "Croatia",
+      type: "City" as const,
+      timeOfDay: "Day" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1555990538-c31f035c8b5c?w=800",
+    },
+    {
+      id: "12",
+      title: "Croatian Coast",
+      country: "Croatia",
+      type: "Beach" as const,
+      timeOfDay: "Day" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1555605239-1c1eab8bc4da?w=800",
+    },
+    {
+      id: "13",
+      title: "Phuket Beach Sunset",
+      country: "Thailand",
+      type: "Beach" as const,
+      timeOfDay: "Day" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=800",
+    },
+    {
+      id: "14",
+      title: "Bangkok Night Markets",
+      country: "Thailand",
+      type: "City" as const,
+      timeOfDay: "Night" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800",
+    },
+    {
+      id: "15",
+      title: "Bali Rice Terraces",
+      country: "Bali",
+      type: "Beach" as const,
+      timeOfDay: "Day" as const,
+      thumbnail:
+        "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800",
     },
   ];
 
